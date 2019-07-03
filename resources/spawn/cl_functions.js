@@ -95,13 +95,17 @@ exports('initialSpawn', (playerId, location) => {
             clearInterval(interval)
             DoScreenFadeIn(0)
             SetPlayerControl(playerId, true)
-            SwitchInPlayer(ped)
+            setTimeout(() => {
+                SwitchInPlayer(ped)
+            }, 2000)
+
         }
+
     }, 50)
 
 })
 
-exports('randomizePed', (playerId)=>{
+exports('randomizePed', (playerId) => {
     let modelHash = exports.utils.getPedsList()[Math.floor(Math.random() * exports.utils.getPedsList().length)]
 
     RequestModel(modelHash)
