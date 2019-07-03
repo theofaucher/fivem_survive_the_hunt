@@ -1,4 +1,5 @@
-exports('peds', [
+exports('getPedsList', ()=>{
+    return [
     'a_f_m_beach_01',
     'a_f_m_bevhills_01',
     'a_f_m_bevhills_02',
@@ -668,4 +669,4 @@ exports('peds', [
     'u_m_y_sbike',
     'u_m_y_staggrm_01',
     'u_m_y_tattoo_01',
-])
+]})

@@ -2,7 +2,7 @@
 
 on('onClientResourceStart', () => {
     ShutdownLoadingScreen()
-
+    exports.spawn.randomizePed(PlayerId())
     exports.spawn.initialSpawn(PlayerId(), {
         x: 0,
         y: 0,

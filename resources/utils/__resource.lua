@@ -1,5 +1,5 @@
 client_scripts{
-    'random.js'
+    'random.js',
     'peds.js'
 }
 server_scripts {

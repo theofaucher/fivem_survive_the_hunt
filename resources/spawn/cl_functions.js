@@ -20,7 +20,7 @@ exports('spawnPlayer', (playerId, location) => {
             SetEntityCollision(ped, true)// Enable collisions
             FreezeEntityPosition(ped, false) // Unfreeze
 
-            
+
             if (IsScreenFadedOut()) {
                 DoScreenFadeIn(500)
                 interval = setInterval(() => {
@@ -40,7 +40,7 @@ exports('spawnPlayer', (playerId, location) => {
 
 exports('spawnPlayerWithTransition', (playerId, location) => {
     let ped = GetPlayerPed(playerId)
-    SwitchOutPlayer(ped,0,1)
+    SwitchOutPlayer(ped, 0, 1)
     let interval = setInterval(() => {
         if (GetPlayerSwitchState() == 5) {
 
@@ -57,7 +57,7 @@ exports('spawnPlayerWithTransition', (playerId, location) => {
             SetEntityCollision(ped, true)// Enable collisions
             FreezeEntityPosition(ped, false) // Unfreeze
 
-            
+
 
             SwitchInPlayer(ped)
             interval = setInterval(() => {
@@ -97,8 +97,77 @@ exports('initialSpawn', (playerId, location) => {
             SetPlayerControl(playerId, true)
             SwitchInPlayer(ped)
         }
-    },50)
+    }, 50)
 
 })
 
+exports('randomizePed', (playerId)=>{
+    let modelHash = exports.utils.getPedsList()[Math.floor(Math.random() * exports.utils.getPedsList().length)]
+
+    RequestModel(modelHash)
+
+
+    let interval = setInterval(() => {
+        if (HasModelLoaded(modelHash)) {
+            clearInterval(interval)
+            SetPlayerModel(playerId, modelHash)
+            SetModelAsNoLongerNeeded(modelHash)
+        }
+    }, 100)
+})
+
+
+
+
+
+
+/* exports('generateRandomPed', (playerId) => {
+    let modelHash;
+    if (exports.utils.getRandomIntInclusive(0, 1) == 1) {
+        modelHash = 'mp_m_freemode_01'
+    } else {
+        modelHash = 'mp_f_freemode_01'
+    }
+    modelHash = 'mp_m_freemode_01'
+
+    RequestModel(modelHash)
+
+    let interval = setInterval(() => {
+        if (HasModelLoaded(modelHash)) {
+            clearInterval(interval)
+            SetPlayerModel(playerId, modelHash)
+            let pedId = PlayerPedId()
+            //SetPedHeadBlendData(pedId, 0, exports.utils.getRandomArbitrary(0, 45), 0, exports.utils.getRandomArbitrary(0, 45), exports.utils.getRandomArbitrary(0, 5), exports.utils.getRandomArbitrary(0, 5), 1.0, 1.0, 1.0, false)
+            SetPedHairColor(pedId, exports.utils.getRandomIntInclusive(0, 4), 1)
+
+            if (IsPedMale(pedId)) {
+                SetPedComponentVariation(pedId, 0, exports.utils.getRandomIntInclusive(0, 20), 0, 2)
+                SetPedHeadBlendData(pedId, 0, exports.utils.getRandomArbitrary(0, 45), 0, exports.utils.getRandomArbitrary(0, 45), exports.utils.getRandomArbitrary(0, 5), exports.utils.getRandomArbitrary(0, 5), 1.0, 1.0, 1.0, false)
+                SetPedComponentVariation(pedId, 2, exports.utils.getRandomIntInclusive(1, 17), 3, 2)
+                SetPedComponentVariation(pedId, 3, 0, 0, 2)
+
+                SetPedComponentVariation(pedId, 4, 1, exports.utils.getRandomIntInclusive(0, 15), 2)
+                SetPedComponentVariation(pedId, 6, 3, exports.utils.getRandomIntInclusive(0, 15), 2)
+                SetPedComponentVariation(pedId, 8, 0, 240, 0)
+                SetPedComponentVariation(pedId, 10, 0, 0, 2)
+                SetPedComponentVariation(pedId, 11, 0, exports.utils.getRandomIntInclusive(0, 5), 0)
+            } else {
+                SetPedComponentVariation(pedId, 0, 0, 0, 2)
+                SetPedComponentVariation(pedId, 2, exports.utils.getRandomIntInclusive(1, 17), 3, 2)
+                SetPedComponentVariation(pedId, 3, 0, 0, 2)
+                SetPedComponentVariation(pedId, 4, 1, exports.utils.getRandomIntInclusive(2), 2)
+                SetPedComponentVariation(pedId, 6, exports.utils.getRandomIntInclusive(0, 6), 0, 2)
+
+                SetPedComponentVariation(pedId, 8, 2, 2, 2)
+                SetPedComponentVariation(pedId, 10, 7, 0, 2)
+                SetPedComponentVariation(pedId, 11, 0, 2, 2)
+            }
+
+            SetModelAsNoLongerNeeded(modelhash)
+
+
+
+        }
+    }, 100)
+}) */
 
