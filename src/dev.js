@@ -1,5 +1,5 @@
 /// <reference path="C:\Users\User\Desktop\FiveM_Hide_And_Seek\server-data\autocompletion\typings\index.d.ts" />
-
+import {WeaponsList} from './hashes/weapons'
 
 RegisterCommand("e", (source, args) => {
     command = args.join(" ")
@@ -40,7 +40,7 @@ RegisterCommand("v", (source, args) => {
 RegisterCommand('w', (source, args) => {
     let ped = PlayerPedId()
     if (typeof(args[0]) == 'undefined') {
-        exports.utils.getWeaponsList().forEach(element => {
+        WeaponsList.forEach(element => {
             GiveWeaponToPed(ped,element,9999,false,false)
         })
     }else{

@@ -7,3 +7,5 @@ resources.old
 autocompletion
 testModule
 serverkey.cfg
+resources/init/cl_init.js
+

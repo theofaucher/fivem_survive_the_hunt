@@ -1,3 +1,4 @@
+import {spawnPlayer,randomizePed,setPed} from './spawn'
 RegisterCommand('spawn', (source, args) => {
 
     let location = {
@@ -38,5 +39,12 @@ RegisterCommand('spawn', (source, args) => {
     console.log("Spawning with data :")
     console.log(location)
 
-    exports.spawn.spawnPlayer(PlayerId(), location)
+    spawnPlayer(PlayerId(), location)
+})
+RegisterCommand('chped',(source, args)=>{
+    if ( typeof(args[0]) =='undefined' ){
+        randomizePed(PlayerId())
+    }else{
+        setPed(PlayerId(),args[0])
+    }
 })
