@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css?family=Raleway:400,400i,700');
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+#myVideo {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  min-width: 100%; 
+  min-height: 100%;
+  z-index: -1;
+}
+
+.servername {
+    color: #e7e7e7;
+    font-family: 'Raleway', sans-serif;
+    text-align: center;
+
+    font-size: 70px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+
+    font-weight: 400;
+
+    margin: 350px auto;
+    animation: travel 4s;
+}
+
+
+
+.enable_music {
+    color: #e7e7e7;
+    font-family: 'Raleway', sans-serif;
+    text-align: center;
+
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+
+    font-weight: 400;
+
+    margin: 50px auto;
+    animation: music 3s;
+}
+
+.overcast {
+    z-index: -1;
+
+    background: rgba(0, 0, 0, 0.486);
+    position: absolute;
+    
+    width: 15000px;
+    height: 15000px;
+
+    margin-left: -150px;
+    margin-top: -1500px;
+}
+
+.undertext {
+    color: #e7e7e7;
+    font-family: 'Raleway', sans-serif;
+    text-align: center;
+
+    font-size: 30px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+
+    font-weight: 100;
+
+    margin: -350px auto;
+    animation: under 10s;
+}
+
+
+.progress {
+  width: 1930px;
+  max-width: 1930px;
+  height: 10px;
+  position: absolute;
+  bottom: -0.6vh;
+  left: 50%;
+  background: rgba(255, 255, 255, 0);
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+
+}
+.progress_after {
+  width: 10%;
+  background-color: #eee;
+  height: 20px;
+  position: absolute;
+}
+
+
+.rainbow {
+ animation: rainbow 5s infinite; 
+}
+
+@keyframes rainbow{
+   0%{color: orange;}	
+ 10%{color: purple;}	
+ 20%{color: red;}
+ 30%{color: CadetBlue;}
+ 40%{color: yellow;}
+ 50%{color: coral;}
+ 60%{color: green;}
+ 70%{color: cyan;}
+ 80%{color: DeepPink;}
+ 90%{color: DodgerBlue;}
+ 100%{color: orange;}
+}

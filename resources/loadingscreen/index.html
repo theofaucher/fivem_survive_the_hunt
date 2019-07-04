@@ -1,0 +1,92 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>FiveM | Loadingscreen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="style.css">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:400,400i,700" rel="stylesheet">
+</head>
+<body>
+    
+    <h1 class="enable_music">Use the <strong>spacebar</strong> to toggle the video</h1>
+    <video id="myVideo" autoplay loop><source src="./video/video.mp4" type="video/mp4">Sorry, your browser doesn't support embedded videos</video>
+
+    <h1 class="servername"><strong>FiveM</strong> Survive the  <span class="rainbow" >hunt</span></h1>
+    <h1 class="undertext">Connecting to the server.</h1>
+    
+    <div class="overcast"></div>
+
+    <div class="letni">
+    <div class="progress"><div class="progress_after"></div></div>
+    </div>
+
+    <script>
+
+var count = 0;
+var thisCount = 0;
+
+const emoji = {
+    INIT_BEFORE_MAP_LOADED: [ ' ' ],
+    INIT_AFTER_MAP_LOADED: [ '' ],
+    INIT_SESSION: [ '' ],
+};
+
+const handlers = {
+    startInitFunctionOrder(data)
+    {
+        count = data.count;
+        document.querySelector('.letni').innerHTML += emoji[data.type] || '';
+    },
+
+    initFunctionInvoking(data)
+    {
+        document.querySelector('.progress_after').style.left = '0%';
+        document.querySelector('.progress_after').style.width = ((data.idx / count) * 100) + '%';
+    },
+
+    startDataFileEntries(data)
+    {
+        count = data.count;
+        document.querySelector('.letni').innerHTML += "";
+    },
+
+    performMapLoadFunction(data)
+    {
+        ++thisCount;
+        document.querySelector('.progress_after').style.left = '0%';
+        document.querySelector('.progress_after').style.width = ((thisCount / count) * 100) + '%';
+    },
+};
+
+window.addEventListener('message', function(e)
+{
+    (handlers[e.data.eventName] || function() {})(e.data);
+});
+
+
+
+    var play = false;
+    var myVideoPlay = document.getElementById("myVideo");
+    
+
+    function onKeyDown(event) {
+            switch (event.keyCode) {
+                case 32: //SpaceBar                    
+                    if (play) {
+                        myVideoPlay.pause();
+                        play = false;
+                    } else {
+                        myVideoPlay.play();
+                        play = true;
+                    }
+                    break;
+            }
+      return false;
+    }
+
+    window.addEventListener("keydown", onKeyDown, false);
+    </script>
+
+</body>
+</html>
