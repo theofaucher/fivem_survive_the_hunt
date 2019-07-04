@@ -3,10 +3,14 @@
 on('onClientResourceStart', () => {
     ShutdownLoadingScreen()
     exports.spawn.randomizePed(PlayerId())
-    exports.spawn.initialSpawn(PlayerId(), {
+    exports.spawn.spawnPlayer(PlayerId(), {
         x: 0,
         y: 0,
         z: 71,
         heading: 0
     })
+
+    //Enable PvP
+    NetworkSetFriendlyFireOption(true)
+    SetCanAttackFriendly(PlayerPedId(), true, true)
 })
