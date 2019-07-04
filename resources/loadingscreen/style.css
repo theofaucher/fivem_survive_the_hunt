@@ -13,6 +13,8 @@ body {
   min-width: 100%; 
   min-height: 100%;
   z-index: -1;
+  filter: blur(0.4rem) drop-shadow(0px 0px 0px #06090d);
+  
 }
 
 .servername {
