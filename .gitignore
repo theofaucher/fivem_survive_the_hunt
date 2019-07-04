@@ -6,3 +6,4 @@ NLog.config
 resources.old
 autocompletion
 testModule
+serverkey.cfg
