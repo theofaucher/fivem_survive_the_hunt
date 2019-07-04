@@ -9,3 +9,4 @@ testModule
 serverkey.cfg
 resources/init/cl_init.js
 
+start_fivem_server.bat
