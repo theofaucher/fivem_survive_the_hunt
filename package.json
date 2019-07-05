@@ -1,0 +1,12 @@
+{
+  "name": "fivem-survive-the-hunt",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "webpack": "latest",
+    "webpack-cli": "latest"
+  },
+  "scripts": {
+    "start": "npx webpack"
+  }
+}
