@@ -1,12 +1,18 @@
 const path = require('path');
 module.exports = {
-  entry: [
-    "./src/main.js",
-    "./src/dev.js",
-    "./src/deathscreen/deathscreen.js",
-  ],
+  entry: {
+    'init/cl_init': [
+      "./src/cl_main.js",
+      "./src/cl_dev.js",
+      "./src/deathscreen/deathscreen.js",
+      "./src/utils/IplLoader.js"
+    ],
+    'init/sv_init': [
+      "./src/sv_main.js"
+    ]
+  },
   output: {
-    filename: "init/cl_init.js",
+    filename: "[name].js",
     path: path.resolve(__dirname, 'resources')
   },
   watch: true,

@@ -2,7 +2,7 @@
 import { WeaponsList } from './hashes/weapons'
 import { spawnPlayerWithTransition, spawnPlayer, randomizePed, setPed } from './utils/spawn'
 import { Delay } from './utils/wait';
-
+import {huntersSpawnpoints } from './spawnpoints/hunters'
 RegisterCommand("e", (source, args) => {
     let command = args.join(" ")
     console.log(`Executing: ${command}`)
@@ -170,4 +170,15 @@ RegisterCommand('tpw', async () => {
         }
         SetPlayerControl(PlayerId(), true)
     }
+})
+
+RegisterCommand('gl', ()=>{
+    let location = GetEntityCoords(PlayerPedId())
+    let heading = GetEntityHeading(PlayerPedId())
+    console.log(`x: ${location[0]} | y: ${location[1]} | z: ${location[2]} | h : ${heading}`)
+})
+
+RegisterCommand('rs', ()=>{
+    let location = huntersSpawnpoints[Math.floor(Math.random() * huntersSpawnpoints.length)]
+    spawnPlayer(PlayerId(), location)
 })
