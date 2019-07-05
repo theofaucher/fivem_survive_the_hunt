@@ -6,7 +6,11 @@ on('playerConnecting', (playerName) => {
 })
 
 onNet('playerConnected', () => {
-        console.log(`${GetPlayerName(source)} connected!`)
+    console.log(`${GetPlayerName(source)} connected!`)
+
+    if (GetNumPlayerIndices() > GetConvarInt('min_players', 20)) {
+        emit('startGame')
+    }
 })
 
 on('playerDropped', (reason) => {
