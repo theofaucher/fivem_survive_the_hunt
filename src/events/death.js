@@ -5,11 +5,12 @@ let player = PlayerId()
 
 
 setInterval(()=>{
-    if (playerDead && !IsPlayerDead()){
+    if (playerDead && !IsPlayerDead(player)){
+        
         emit('events:playerAlive')
         playerDead = false
     }
-    if ( !playerDead && IsPlayerDead()){
+    if ( !playerDead && IsPlayerDead(player)){
         emit('events:playerDied')
         playerDead = true
     }
