@@ -1,4 +1,4 @@
-//<reference path="D:\Projets\FiveM\Survive_the_hunt\server-data\autocompletion\typings\index.d.ts" />
+/// <reference path="D:\Projets\FiveM\Survive_the_hunt\server-data\autocompletion\typings\index.d.ts" />
 import  './../events/death.js'
 let locksound = false
 
