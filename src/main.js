@@ -1,4 +1,4 @@
-import * as spawnLib from './spawn/spawn'
+import * as spawnLib from './utils/spawn'
 import './dev'
 
 async function main (){

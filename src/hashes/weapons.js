@@ -90,5 +90,5 @@ export const WeaponsList = [
     "WEAPON_BALL",
     "WEAPON_PETROLCAN",
     "WEAPON_FIREEXTINGUISHER",
-    "WEAPON_PARACHUTE",
+    "GADGET_PARACHUTE",
 ]

@@ -1,15 +1,16 @@
 /// <reference path="C:\Users\User\Desktop\FiveM_Hide_And_Seek\server-data\autocompletion\typings\index.d.ts" />
 
-import './commands.js'
 import { pedsList } from '../hashes/peds'
-import { Delay } from '../utils/wait'
+import { Delay } from './wait'
 
-function spawn(playerId, location={
+const defaultLocation = {
     x: 0,
     y: 0,
     z: 70,
     heading: 0,
-}) {
+}
+
+function spawn(playerId, location=defaultLocation) {
     let ped = GetPlayerPed(playerId)
     FreezeEntityPosition(ped, true)
     SetEntityCollision(ped, false)
@@ -22,7 +23,6 @@ function spawn(playerId, location={
     SetEntityCollision(ped, true)// Enable collisions
     FreezeEntityPosition(ped, false) // Unfreeze
 }
-
 
 export async function spawnPlayer(playerId, location, fadeDuration = 500) {
 
@@ -42,44 +42,25 @@ export async function spawnPlayer(playerId, location, fadeDuration = 500) {
 
 }
 
-
-export function spawnPlayerWithTransition(playerId, location) {
+export async function spawnPlayerWithTransition(playerId, location) {
     let ped = GetPlayerPed(playerId)
+
+    SetPlayerControl(playerId, false)
     SwitchOutPlayer(ped, 0, 1)
-    let interval = setInterval(() => {
-        if (GetPlayerSwitchState() == 5) {
 
-            clearInterval(interval)
-            SetPlayerControl(playerId, false) // Disable controls, collisions and freeze position
-            FreezeEntityPosition(ped, true)
-            SetEntityCollision(ped, false)
+    while(GetPlayerSwitchState() !== 5){
+        await Delay(100)
+    }
 
-            RequestCollisionAtCoord(location.x, location.y, location.z) // Load collisions
-            SetEntityCoordsNoOffset(ped, location.x, location.y, location.z, false, false, false)// Teleport
-            NetworkResurrectLocalPlayer(location.x, location.y, location.z, location.heading, true, false) //Resurect
-            ClearPedTasksImmediately(ped)// Clean gamelogic
+    spawn(playerId, location)
+    SwitchInPlayer(ped)
 
-            SetEntityCollision(ped, true)// Enable collisions
-            FreezeEntityPosition(ped, false) // Unfreeze
-
-
-
-            SwitchInPlayer(ped)
-            interval = setInterval(() => {
-                if (IsPlayerSwitchInProgress()) {
-                    clearInterval(interval)
-                    SetPlayerControl(playerId, true)
-                }
-            }, 50)
-
-        }
-
-    }, 50)
-
+    while(IsPlayerSwitchInProgress()){
+        await Delay(100)
+    }
+    SetPlayerControl(playerId,true)
 
 }
-
-
 
 export async function randomizePed(playerId) {
     let modelHash = pedsList[Math.floor(Math.random() * pedsList.length)]
