@@ -1,5 +1,4 @@
 import * as spawnLib from './utils/spawn'
-import './dev'
 
 async function main (){
     ShutdownLoadingScreen()
