@@ -18,3 +18,11 @@ async function main (){
 }
 
 main()
+
+onNet('spawn', (location, enableTransition=false)=>{
+    if (enableTransition){
+        spawnLib.spawnPlayerWithTransition(PlayerId(),location)
+    }else{
+        spawnLib.spawnPlayer(PlayerId(),location)
+    }
+})
