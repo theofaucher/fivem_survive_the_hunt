@@ -10,13 +10,16 @@ const defaultLocation = {
     heading: 0,
 }
 
-function spawn(playerId, location=defaultLocation) {
+async function  spawn(playerId, location=defaultLocation) {
     let ped = GetPlayerPed(playerId)
     FreezeEntityPosition(ped, true)
     SetEntityCollision(ped, false)
 
     RequestCollisionAtCoord(location.x, location.y, location.z) // Load collisions
-    SetEntityCoordsNoOffset(ped, location.x, location.y, location.z, false, false, false)// Teleport
+    StartPlayerTeleport(PlayerId(), location.x, location.y, location.z, location.heading)
+        while (!HasPlayerTeleportFinished()) {
+            await Delay(100)
+        }// Teleport
     NetworkResurrectLocalPlayer(location.x, location.y, location.z, location.heading, true, false) //Resurect
     ClearPedTasksImmediately(ped)// Clean gamelogic
 
@@ -27,14 +30,14 @@ function spawn(playerId, location=defaultLocation) {
 export async function spawnPlayer(playerId, location, fadeDuration = 500) {
 
     DoScreenFadeOut(fadeDuration)
-    while (!IsScreenFadedOut) {
+    while (!IsScreenFadedOut()) {
         await Delay(100)
     }
     SetPlayerControl(playerId, false)
-    spawn(playerId, location)
+    await spawn(playerId, location)
 
     DoScreenFadeIn(fadeDuration)
-    while (!IsScreenFadedIn) {
+    while (!IsScreenFadedIn()) {
         await Delay(100)
     }
 
@@ -52,7 +55,7 @@ export async function spawnPlayerWithTransition(playerId, location) {
         await Delay(100)
     }
 
-    spawn(playerId, location)
+    await spawn(playerId, location)
     SwitchInPlayer(ped)
 
     while(IsPlayerSwitchInProgress()){
