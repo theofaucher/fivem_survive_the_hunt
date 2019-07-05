@@ -1,7 +1,7 @@
 import {spawnPlayer,randomizePed,setPed} from './spawn'
 RegisterCommand('spawn', (source, args) => {
 
-    let location = {
+    /* let location = {
         x: 0,
         y: 0,
         z: 0,
@@ -34,13 +34,15 @@ RegisterCommand('spawn', (source, args) => {
     if (isNaN(location.heading)) {
         //console.log("Error heading value is not a number, defaulting to 0")
         location.heading = 0
-    }
+    } */
 
     console.log("Spawning with data :")
     console.log(location)
 
     spawnPlayer(PlayerId(), location)
 })
+
+
 RegisterCommand('chped',(source, args)=>{
     if ( typeof(args[0]) =='undefined' ){
         randomizePed(PlayerId())

@@ -4,7 +4,12 @@ import './commands.js'
 import { pedsList } from '../hashes/peds'
 import { Delay } from '../utils/wait'
 
-function spawn(playerId, location) {
+function spawn(playerId, location={
+    x: 0,
+    y: 0,
+    z: 70,
+    heading: 0,
+}) {
     let ped = GetPlayerPed(playerId)
     FreezeEntityPosition(ped, true)
     SetEntityCollision(ped, false)
