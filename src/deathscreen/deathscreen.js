@@ -2,7 +2,7 @@
 import  './../events/death.js'
 let locksound = false
 
-on('event:playerDied', (playerDead) => {
+on('events:playerDied', (playerDead) => {
 
         console.log("Un joueur est mort")
         StartScreenEffect("DeathFailOut", 0, 0)
@@ -30,7 +30,7 @@ on('event:playerDied', (playerDead) => {
                         setTimeout(function(){
                                 PlaySoundFrontend(-1, "TextHit", "WastedSounds", 1)
 
-                                on('event:playerDied', (playerDead) => {
+                                on('events:playerDied', (playerDead) => {
                                         DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255)
 
                                 })
