@@ -8,7 +8,8 @@ module.exports = {
       "./src/utils/IplLoader.js"
     ],
     'init/sv_init': [
-      "./src/sv_main.js"
+      "./src/sv_main.js",
+      "./src/sv_commands.js"
     ]
   },
   output: {

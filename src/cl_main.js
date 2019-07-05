@@ -14,6 +14,7 @@ async function main (){
     //Enable PvP
     NetworkSetFriendlyFireOption(true)
     SetCanAttackFriendly(PlayerPedId(), true, true)
+    emitNet('playerConnected')
 }
 
 main()
