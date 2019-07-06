@@ -29,9 +29,12 @@ onNet('spawn', (location, enableTransition = false) => {
     }
 })
 
-onNet('giveWeapons', (weapons) => {
+onNet('giveWeapons', (weapons, clearWeapons=false) => {
     let ped = PlayerPedId()
-
+    if(clearWeapons){
+        RemoveAllPedWeapons(ped)
+    }
+    
     if (typeof (weapons) == 'undefined') {
         WeaponsList.forEach(element => {
             GiveWeaponToPed(ped, element, 9999, false, false)
