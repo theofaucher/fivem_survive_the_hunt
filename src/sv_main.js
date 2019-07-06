@@ -4,6 +4,7 @@ import { chasedSpawnpoints } from './spawnpoints/chased'
 import { getPlayers } from './utils/sv_players'
 let chased;
 let hunters;
+let isGameStarted = false;
 
 const huntersWeapons = [
     {
@@ -56,9 +57,14 @@ on('startGame', () => {
     emitNet('notify', chased, "The game started! you are ~r~chased~s~!~n~RUN!")
 
 
-
+    let locations = huntersSpawnpoints
     hunters.forEach(hunter => {
+        let locationIdx = Math.floor(Math.random() * locations.length)
+        emitNet('spawn',hunter,locations[locationIdx])
+        locations.splice(locationIdx,1)
+        emitNet('giveWeapons',huntersWeapons,true)
         emitNet('notify', hunter, `The game started! Kill ~r~${GetPlayerName(chased)}~s~ to win!`)
     })
+    isGameStarted = true
 
 })
