@@ -5,6 +5,7 @@ module.exports = {
       "./src/cl_main.js",
       "./src/cl_dev.js",
       "./src/deathscreen/deathscreen.js",
+      "./src/wantedlevel/wantedlevel.js",
       "./src/utils/IplLoader.js"
     ],
     'init/sv_init': [
