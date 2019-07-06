@@ -36,11 +36,11 @@ on('events:playerDied', async() => {
 })
 
 
-on('events:playerAlive'), () => {
+on('events:playerAlive', () => {
 
         console.log("Ca test")
         clearTick(tick);
         StopScreenEffect("DeathFailOut")
         locksound = false
 
-}
+})
