@@ -6,3 +6,7 @@ RegisterCommand('list',()=>{
         console.log(GetPlayerName(player))
     });
 })
+
+RegisterCommand('startGame',()=>{
+    emit('startGame')
+})
