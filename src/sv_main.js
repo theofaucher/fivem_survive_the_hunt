@@ -6,7 +6,7 @@ import { Delay } from './utils/wait'
 let chased;
 let hunters = [];
 let isGameStarted = false;
-
+let startTime;
 const huntersWeapons = [
     {
         hash: 'WEAPON_PUMPSHOTGUN',
@@ -64,30 +64,41 @@ on('startGame', () => {
         emitNet('spawn', hunter, locations[locationIdx])
         locations.splice(locationIdx, 1)
         emitNet('giveWeapons', huntersWeapons, true)
-        emitNet('notify', hunter, `The game started! Kill ~r~${GetPlayerName(chased)}~s~ to win!`)
+        emitNet('notify', hunter, `The game started! Kill ~b~${GetPlayerName(chased)}~s~ to win!`)
     })
     isGameStarted = true
-
+    startTime = Date.now()
 })
 
 onNet('events:playerDied', async () => {
-    emitNet('notify', -1, `~r~${GetPlayerName(source)}~s~ died`)
+    console.log(`${GetPlayerName(source)} died`)
+    emitNet('notify', -1, `${GetPlayerName(source)} died`)
     if (isGameStarted) {
         if (hunters.includes(source)) {
             hunters.splice(hunters.indexOf(source), 1)
             if (hunters.length > 0) {
                 emitNet('notify', -1, `~r~${hunters.length}~s~ hunters left`)
             } else {
-                emit('gameEnd')
+
+                emit('gameEnd', false)
             }
         }
 
         if (source == chased) {
-            emit('gameEnd')
+            emit('gameEnd', true)
         }
 
     } else {
         await Delay(5000)
         emitNet('spawn', source, huntersSpawnpoints[Math.floor(Math.random() * huntersSpawnpoints.length)])
+    }
+})
+
+on('gameEnd', (huntersWon) => {
+    isGameStarted = false
+    if (huntersWon) {
+        emitNet('notify', -1, `~b~${GetPlayerName(chased)}~s~ survived ${new Date(Date.now() - startTime).toISOString().substr(11, 8)}`)
+    } else {
+        emitNet('notify', -1, `~r~Hunters~s~ were so bad that ~b~${GetPlayerName(chased)}~s~ managed to kill them all!`)
     }
 })
