@@ -39,14 +39,19 @@ onNet('playerConnected', () => {
 })
 
 on('startGame', () => {
-    let players = getPlayers()
-    chased = players[Math.floor(Math.random() * players.length)]
-    players.slice(players.indexOf(chased), 1)
-    hunters = players
+    let hunters = getPlayers()
+    
+    let rand = Math.floor(Math.random() * hunters.length)
+
+    chased = hunters[rand]
+    hunters.splice(rand, 1)
+    
+
+    console.log(hunters)
 
     console.log(`Game started, chased : ${GetPlayerName(chased)}`)
 
-    emitNet('spawn', chased, chasedSpawnpoints[Math.floor(Math.random() * chasedSpawnpoints.length)])
+    emitNet('spawn', chased, chasedSpawnpoints[Math.floor(Math.random() * chasedSpawnpoints.length)], true)
     emitNet('giveWeapons',chased)
     emitNet('notify', chased, "The game started! you are ~r~chased~s~!~n~RUN!")
 
