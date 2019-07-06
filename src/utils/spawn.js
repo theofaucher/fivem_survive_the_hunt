@@ -10,16 +10,16 @@ const defaultLocation = {
     heading: 0,
 }
 
-async function  spawn(playerId, location=defaultLocation) {
+async function spawn(playerId, location = defaultLocation) {
     let ped = GetPlayerPed(playerId)
     FreezeEntityPosition(ped, true)
     SetEntityCollision(ped, false)
 
     RequestCollisionAtCoord(location.x, location.y, location.z) // Load collisions
     StartPlayerTeleport(PlayerId(), location.x, location.y, location.z, location.heading)
-        while (!HasPlayerTeleportFinished()) {
-            await Delay(100)
-        }// Teleport
+    while (IsPlayerTeleportActive()) {
+        await Delay(100)
+    }// Teleport
     NetworkResurrectLocalPlayer(location.x, location.y, location.z, location.heading, true, false) //Resurect
     ClearPedTasksImmediately(ped)// Clean gamelogic
 
@@ -51,27 +51,27 @@ export async function spawnPlayerWithTransition(playerId, location) {
     SetPlayerControl(playerId, false)
     SwitchOutPlayer(ped, 0, 1)
 
-    while(GetPlayerSwitchState() !== 5){
+    while (GetPlayerSwitchState() !== 5) {
         await Delay(100)
     }
 
     await spawn(playerId, location)
     SwitchInPlayer(ped)
 
-    while(IsPlayerSwitchInProgress()){
+    while (IsPlayerSwitchInProgress()) {
         await Delay(100)
     }
-    SetPlayerControl(playerId,true)
+    SetPlayerControl(playerId, true)
 
 }
 
 export async function randomizePed(playerId) {
     let modelHash = pedsList[Math.floor(Math.random() * pedsList.length)]
-    await setPed(playerId,modelHash)
-    
+    await setPed(playerId, modelHash)
+
 }
 
-export async function setPed(playerId,modelHash){
+export async function setPed(playerId, modelHash) {
     console.log(`MODEL: ${modelHash}`)
     if (IsModelValid(modelHash) && IsModelAPed(modelHash)) {
         RequestModel(modelHash)
