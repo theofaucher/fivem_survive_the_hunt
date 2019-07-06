@@ -17,5 +17,7 @@ module.exports = {
     path: path.resolve(__dirname, 'resources')
   },
   watch: true,
-  mode: 'production',
+  mode: 'development',
+  devtool: 'inline-source-map',
+
 }
