@@ -41,3 +41,10 @@ onNet('giveWeapons', (weapons) => {
         })
     }
 })
+
+onNet('notify',(text)=>{
+    SetNotificationTextEntry("STRING")
+    AddTextComponentString(text)
+    let notification = DrawNotification(true, true)
+
+})
