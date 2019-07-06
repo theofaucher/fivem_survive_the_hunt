@@ -3,7 +3,7 @@ import { huntersSpawnpoints } from './spawnpoints/hunters'
 import { chasedSpawnpoints } from './spawnpoints/chased'
 import { getPlayers } from './utils/sv_players'
 let chased;
-let hunters;
+let hunters = [];
 let isGameStarted = false;
 
 const huntersWeapons = [
@@ -41,30 +41,51 @@ onNet('playerConnected', () => {
 
 on('startGame', () => {
     let hunters = getPlayers()
-    
+
     let rand = Math.floor(Math.random() * hunters.length)
 
     chased = hunters[rand]
     hunters.splice(rand, 1)
-    
+
 
     console.log(hunters)
 
     console.log(`Game started, chased : ${GetPlayerName(chased)}`)
 
     emitNet('spawn', chased, chasedSpawnpoints[Math.floor(Math.random() * chasedSpawnpoints.length)], true)
-    emitNet('giveWeapons',chased)
+    emitNet('giveWeapons', chased)
     emitNet('notify', chased, "The game started! you are ~r~chased~s~!~n~RUN!")
 
 
     let locations = huntersSpawnpoints
     hunters.forEach(hunter => {
         let locationIdx = Math.floor(Math.random() * locations.length)
-        emitNet('spawn',hunter,locations[locationIdx])
-        locations.splice(locationIdx,1)
-        emitNet('giveWeapons',huntersWeapons,true)
+        emitNet('spawn', hunter, locations[locationIdx])
+        locations.splice(locationIdx, 1)
+        emitNet('giveWeapons', huntersWeapons, true)
         emitNet('notify', hunter, `The game started! Kill ~r~${GetPlayerName(chased)}~s~ to win!`)
     })
     isGameStarted = true
 
+})
+
+onNet('events:playerDied', () => {
+    emitNet('notify', -1, `~r~${GetPlayerName(source)}~s~ died`)
+    if (isGameStarted) {
+        if (hunters.includes(source)) {
+            hunters.splice(hunters.indexOf(source), 1)
+            if (hunters.length > 0) {
+                emitNet('notify', -1, `~r~${hunters.length}~s~ hunters left`)
+            } else {
+                emit('gameEnd')
+            }
+        }
+
+        if (source == chased) {
+            emit('gameEnd')
+        }
+
+    } else {
+        emitNet('spawn', source, huntersSpawnpoints[Math.floor(Math.random() * huntersSpawnpoints.length)])
+    }
 })
