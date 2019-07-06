@@ -2,10 +2,11 @@
 
 import * as spawnLib from './utils/spawn'
 import { WeaponsList } from './hashes/weapons'
+import { Delay } from './utils/wait';
 
 async function main() {
     DoScreenFadeOut(0)
-
+    
     await spawnLib.randomizePed(PlayerId()) // Change Skin
 
     RequestCollisionAtCoord(0, 0, 0) // Load collisions
@@ -43,10 +44,9 @@ onNet('giveWeapons', (weapons) => {
 })
 
 onNet('notify', async (text) => {
-    while(!IsScreenFadedIn){
-        await Delay(100)
+    while (!IsScreenFadedIn()){
+        await Delay(1000)
     }
-
     SetNotificationTextEntry("STRING")
     AddTextComponentString(text)
     let notification = DrawNotification(true, true)
