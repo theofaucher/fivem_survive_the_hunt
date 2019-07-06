@@ -8,10 +8,12 @@ setInterval(()=>{
     if (playerDead && !IsPlayerDead(player)){
         
         emit('events:playerAlive')
+        emitNet('events:playerAlive')
         playerDead = false
     }
     if ( !playerDead && IsPlayerDead(player)){
         emit('events:playerDied')
+        emitNet('events:playerDied')
         playerDead = true
     }
 },200)
