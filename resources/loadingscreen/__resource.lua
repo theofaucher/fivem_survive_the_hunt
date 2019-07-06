@@ -4,7 +4,7 @@ description 'loadingscreen'
 files {
     'index.html',
     'style.css',
-    'video/video.mp4'
+    'image/ring_road.png'
 }
 
 loadscreen 'index.html'
