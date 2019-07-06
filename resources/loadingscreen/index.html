@@ -9,8 +9,8 @@
 </head>
 <body>
     
-    <h1 class="enable_music">Use the <strong>spacebar</strong> to toggle the video</h1>
-    <video id="myVideo" autoplay loop><source src="./video/video.mp4" type="video/mp4">Sorry, your browser doesn't support embedded videos</video>
+    <h1 class="enable_music">Use the <strong>spacebar</strong> to show the rules</h1>
+    <div id="image"></div>
 
     <h1 class="servername"><strong>FiveM</strong> Survive the  <span class="rainbow" >hunt</span></h1>
     <h1 class="undertext">Connecting to the server.</h1>
@@ -64,28 +64,30 @@ window.addEventListener('message', function(e)
     (handlers[e.data.eventName] || function() {})(e.data);
 });
 
-
-
-    var play = false;
-    var myVideoPlay = document.getElementById("myVideo");
+var ShowRules = false;
     
+    document.body.onkeypress = function (event) {
 
-    function onKeyDown(event) {
-            switch (event.keyCode) {
-                case 32: //SpaceBar                    
-                    if (play) {
-                        myVideoPlay.pause();
-                        play = false;
-                    } else {
-                        myVideoPlay.play();
-                        play = true;
-                    }
-                    break;
+        if (!event.repeat) {
+
+            if (event.keyCode == 32) {
+
+                ShowRules = !ShowRules
+
             }
-      return false;
+
+            if (showRules) {
+
+                document.getElementById("myRules").style.height = "700px";
+
+            } else {
+                
+                document.getElementById('myRules').style.height = "0%";
+                
+            }
+        }
     }
 
-    window.addEventListener("keydown", onKeyDown, false);
     </script>
 
 </body>

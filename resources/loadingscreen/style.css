@@ -4,18 +4,22 @@ body {
     margin: 0;
     padding: 0;
     overflow: hidden;
+    
+
 }
 
-#myVideo {
+#image   {
   position: fixed;
   right: 0;
   bottom: 0;
   min-width: 100%; 
   min-height: 100%;
   z-index: -1;
-  /*filter: blur(0.4rem) drop-shadow(0px 0px 0px #06090d);*/
-  
+  filter: blur(0.4rem) drop-shadow(0px 0px 0px #06090d);
+  background-image: url("./image/ring_road.png");
+
 }
+
 
 .servername {
     color: #e7e7e7;
