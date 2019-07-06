@@ -4,17 +4,17 @@ import * as spawnLib from './utils/spawn'
 import { WeaponsList } from './hashes/weapons'
 
 async function main() {
-    ShutdownLoadingScreen()
-    await spawnLib.randomizePed(PlayerId())
-    /*await spawnLib.spawnPlayer(PlayerId(), {
-        x: 0,
-        y: 0,
-        z: 71,
-        heading: 0
-    })*/
-    //Enable PvP
-    NetworkSetFriendlyFireOption(true)
+    DoScreenFadeOut(0)
+
+    await spawnLib.randomizePed(PlayerId()) // Change Skin
+
+    RequestCollisionAtCoord(0, 0, 0) // Load collisions
+    SetEntityCoordsNoOffset(GetPlayerPed(), 0, 0, 0, false, false, false) //Initial Position ( game doesn't work if you dont have one)
+
+    NetworkSetFriendlyFireOption(true)//PvP
     SetCanAttackFriendly(PlayerPedId(), true, true)
+
+    ShutdownLoadingScreen()
     emitNet('playerConnected')
 }
 
@@ -42,7 +42,11 @@ onNet('giveWeapons', (weapons) => {
     }
 })
 
-onNet('notify',(text)=>{
+onNet('notify', async (text) => {
+    while(!IsScreenFadedIn){
+        await Delay(100)
+    }
+
     SetNotificationTextEntry("STRING")
     AddTextComponentString(text)
     let notification = DrawNotification(true, true)
