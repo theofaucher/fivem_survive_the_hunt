@@ -2,6 +2,7 @@
 import { huntersSpawnpoints } from './spawnpoints/hunters'
 import { chasedSpawnpoints } from './spawnpoints/chased'
 import { getPlayers } from './utils/sv_players'
+import { Delay } from './utils/wait'
 let chased;
 let hunters = [];
 let isGameStarted = false;
@@ -69,7 +70,7 @@ on('startGame', () => {
 
 })
 
-onNet('events:playerDied', () => {
+onNet('events:playerDied', async () => {
     emitNet('notify', -1, `~r~${GetPlayerName(source)}~s~ died`)
     if (isGameStarted) {
         if (hunters.includes(source)) {
@@ -86,6 +87,7 @@ onNet('events:playerDied', () => {
         }
 
     } else {
+        await Delay(5000)
         emitNet('spawn', source, huntersSpawnpoints[Math.floor(Math.random() * huntersSpawnpoints.length)])
     }
 })
