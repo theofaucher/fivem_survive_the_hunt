@@ -6,11 +6,13 @@ module.exports = {
       "./src/cl_dev.js",
       "./src/deathscreen/deathscreen.js",
       "./src/wantedlevel/wantedlevel.js",
-      "./src/utils/IplLoader.js"
+      "./src/utils/IplLoader.js",
+      "./src/blips/cl_blips.js"
     ],
     'init/sv_init': [
       "./src/sv_main.js",
-      "./src/sv_commands.js"
+      "./src/sv_commands.js",
+      "./src/blips/sv_blips.js"
     ]
   },
   output: {
