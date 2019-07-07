@@ -544,7 +544,6 @@ export const pedsList = [
     's_m_m_marine_01',
     's_m_m_marine_02',
     's_m_m_migrant_01',
-    's_m_m_movalien_01',
     's_m_m_movprem_01',
     's_m_m_movspace_01',
     's_m_m_paramedic_01',
