@@ -23,7 +23,7 @@ on('events:playerDied', async () => {
         tick = setTick(() => {
                 PushScaleformMovieFunction(scaleform, "SHOW_SHARD_WASTED_MP_MESSAGE")
                 BeginTextComponent("STRING")
-                AddTextComponentString("~r~wasted")
+                AddTextComponentString("~r~ELIMINATED")
                 EndTextComponent()
                 PopScaleformMovieFunctionVoid()
                 DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255)
