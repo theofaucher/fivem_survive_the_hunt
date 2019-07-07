@@ -23,8 +23,6 @@ setInterval(function(){
 
         if (GetPlayerWantedLevel() == 2){
 
-          console.log("Au moins 2 etoiles")
-
             if ( lockDateTo2Wanted == false ){
                 startTime = Date.now()
                 endTime = 0
@@ -34,12 +32,8 @@ setInterval(function(){
     
             endTime = Date.now()
 
-            let test = new Date(endTime - startTime).toISOString().substr(11, 8)
-            console.log(test)
-
                 if (new Date(endTime - startTime).toISOString().substr(11, 8) == "00:01:00"){
                     
-                    console.log("O yes 1")
                     ClearPlayerWantedLevel()
                     lockDateTo2Wanted = false
                     lockDateTo3Wanted = false
@@ -53,8 +47,6 @@ setInterval(function(){
 
         if (GetPlayerWantedLevel() == 3){
 
-            console.log("Au moins 3 etoiles")
-
             if ( lockDateTo3Wanted == false ){
 
                 startTime = Date.now()
@@ -65,12 +57,8 @@ setInterval(function(){
     
             endTime = Date.now()
 
-            let test = new Date(endTime - startTime).toISOString().substr(11, 8)
-            console.log(test)
-
                 if (new Date(endTime - startTime).toISOString().substr(11, 8) == "00:00:30"){
                     
-                    console.log("O yes 2")
                     ClearPlayerWantedLevel()
                     lockDateTo3Wanted = false
                     lockDateTo2Wanted = false
