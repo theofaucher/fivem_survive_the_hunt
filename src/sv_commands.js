@@ -10,3 +10,8 @@ RegisterCommand('list',()=>{
 RegisterCommand('startGame',()=>{
     emit('startGame')
 })
+
+RegisterCommand('rr', ()=>{
+    ExecuteCommand('refresh')
+    ExecuteCommand('ensure init')
+})
