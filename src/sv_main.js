@@ -101,6 +101,10 @@ on('gameEnd', (huntersWon) => {
     isGameStarted = false
 
     let locations = huntersSpawnpoints
+    let timeSurvived = new Date(Date.now() - startTime)
+    scoreboard.push([chased, timeSurvived])
+
+
     getPlayers().forEach(player => {
         let locationIdx = Math.floor(Math.random() * locations.length)
         emitNet('spawn', player, locations[locationIdx])
@@ -109,7 +113,7 @@ on('gameEnd', (huntersWon) => {
     })
 
     if (huntersWon) {
-        emitNet('notify', -1, `~b~${GetPlayerName(chased)}~s~ survived ${new Date(Date.now() - startTime).toISOString().substr(11, 8)}`)
+        emitNet('notify', -1, `~b~${GetPlayerName(chased)}~s~ survived ${timeSurvived.toISOString().substr(11, 8)}`)
     } else {
         emitNet('notify', -1, `~r~Hunters~s~ were so bad that ~b~${GetPlayerName(chased)}~s~ managed to kill them all!`)
     }
