@@ -23,14 +23,14 @@ const huntersWeapons = [
 ]
 
 onNet('playerConnected', () => {
-
-    console.log(`${GetPlayerName(source)} connected!`)
+    let playerId = source
+    console.log(`${GetPlayerName(playerId)} connected!`)
 
     let location = huntersSpawnpoints[Math.floor(Math.random() * huntersSpawnpoints.length)]
-    emitNet('spawn', source, location) // Force player respawn
-    emitNet('giveWeapons', source, huntersWeapons)
+    emitNet('spawn', playerId, location) // Force player respawn
+    emitNet('giveWeapons', playerId, huntersWeapons)
 
-    emitNet('notify', -1, `~b~${GetPlayerName(source)}~s~ has connected`)
+    emitNet('notify', -1, `~b~${GetPlayerName(playerId)}~s~ has connected`)
 
 
     if (GetNumPlayerIndices() >= GetConvarInt('min_players', 20)) {
@@ -68,52 +68,50 @@ on('startGame', () => {
 })
 
 onNet('events:playerDied', async () => {
-    try {
-        emitNet('notify', -1, `${GetPlayerName(source)} died`)
+    let playerId = source
+    emitNet('notify', -1, `${GetPlayerName(playerId)} died`)
 
-        if (isGameStarted) {
+    if (isGameStarted) {
 
-            if (hunters.includes(source.toString())) {
+        if (hunters.includes(playerId.toString())) {
 
-                hunters.splice(hunters.indexOf(source), 1)
+            hunters.splice(hunters.indexOf(playerId), 1)
 
-                if (hunters.length > 0) {
-                    emitNet('notify', -1, `~r~${GetPlayerName(source)}~s~ died ~r~${hunters.length}~s~ hunters left`)
-                } else {
-                    emit('gameEnd', false)
-                }
-
+            if (hunters.length > 0) {
+                emitNet('notify', -1, `~r~${GetPlayerName(playerId)}~s~ died ~r~${hunters.length}~s~ hunters left`)
+            } else {
+                emit('gameEnd', false)
             }
 
-            if (source == chased) {
-                emit('gameEnd', true)
-            }
-
-        } else {
-            console.log(`${GetPlayerName(source)} died`)
-            await Delay(5000)
-            emitNet('spawn', source, huntersSpawnpoints[Math.floor(Math.random() * huntersSpawnpoints.length)])
         }
-    }
-    catch (e) {
-        console.log('An error occured during playerDeath event')
+
+        if (playerId == chased) {
+            emit('gameEnd', true)
+        }
+
+    } else {
+        console.log(`${GetPlayerName(playerId)} died`)
+        await Delay(5000)
+        let locationIdx = Math.floor(Math.random() * huntersSpawnpoints.length)
+        emitNet('spawn', playerId, huntersSpawnpoints[locationIdx])
     }
 })
 
 on('gameEnd', (huntersWon) => {
     isGameStarted = false
-    if (huntersWon) {
-        emitNet('notify', -1, `~b~${GetPlayerName(chased)}~s~ survived ${new Date(Date.now() - startTime).toISOString().substr(11, 8)}`)
-    } else {
-        emitNet('notify', -1, `~r~Hunters~s~ were so bad that ~b~${GetPlayerName(chased)}~s~ managed to kill them all!`)
-    }
-    
+
     let locations = huntersSpawnpoints
-    getPlayers().forEach(player=>{
+    getPlayers().forEach(player => {
         let locationIdx = Math.floor(Math.random() * locations.length)
         emitNet('spawn', player, locations[locationIdx])
         locations.splice(locationIdx, 1)
         emitNet('giveWeapons', huntersWeapons, true)
     })
+
+    if (huntersWon) {
+        emitNet('notify', -1, `~b~${GetPlayerName(chased)}~s~ survived ${new Date(Date.now() - startTime).toISOString().substr(11, 8)}`)
+    } else {
+        emitNet('notify', -1, `~r~Hunters~s~ were so bad that ~b~${GetPlayerName(chased)}~s~ managed to kill them all!`)
+    }
 
 })
