@@ -21,6 +21,12 @@ function SetBlip(blip) {
             break;
 
         default:
+            if (typeof blip.id == 'undefined') {
+                blip.id = AddBlipForCoord(0, 0, 0)
+            }
+            if (typeof blip.sprite !== 'undefined') {
+                SetBlipSprite(blip.id, blipsSprites[blip.sprite])
+            }
             break;
     }
 
