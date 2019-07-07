@@ -2,11 +2,11 @@
 
 //GetPlayerWantedLevel
 //ClearPlayerWantedLevel
- /*setInterval(function(){
+/*setInterval(function(){
 
-    SetPlayerWantedLevel(PlayerId(), 4, 0)
-    SetPlayerWantedLevelNow(PlayerId(), 0)
-    console.log(GetPlayerWantedLevel())
+   SetPlayerWantedLevel(PlayerId(), 4, 0)
+   SetPlayerWantedLevelNow(PlayerId(), 0)
+   console.log(GetPlayerWantedLevel())
 
 }*/
 import { Delay } from '../utils/wait'
@@ -91,4 +91,4 @@ setInterval(function(){
         }
 
 
-},500)
+}, 500)
