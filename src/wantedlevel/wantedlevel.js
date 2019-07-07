@@ -2,11 +2,11 @@
 
 //GetPlayerWantedLevel
 //ClearPlayerWantedLevel
- /*setInterval(function(){
+/*setInterval(function(){
 
-    SetPlayerWantedLevel(PlayerId(), 4, 0)
-    SetPlayerWantedLevelNow(PlayerId(), 0)
-    console.log(GetPlayerWantedLevel())
+   SetPlayerWantedLevel(PlayerId(), 4, 0)
+   SetPlayerWantedLevelNow(PlayerId(), 0)
+   console.log(GetPlayerWantedLevel())
 
 
 
@@ -15,14 +15,12 @@
 
 }*/
 
-setInterval(function(){
-    
-console.log(GetPlayerWantedLevel(PlayerId()))
+setInterval(function () {
 
-if (GetPlayerWantedLevel()>= 4){
+    if (GetPlayerWantedLevel() >= 4) {
 
-    SetPlayerWantedLevel(PlayerId(), 3, 0)
-    SetPlayerWantedLevelNow(PlayerId(), 0)
-}
+        SetPlayerWantedLevel(PlayerId(), 3, 0)
+        SetPlayerWantedLevelNow(PlayerId(), 0)
+    }
 
-},500)
+}, 500)
