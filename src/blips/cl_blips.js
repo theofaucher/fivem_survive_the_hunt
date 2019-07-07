@@ -50,6 +50,10 @@ function SetBlip(blip) {
         SetBlipCategory(blip.id, blip.category)
     }
 
+    if (typeof blip.route !== 'undefined') {
+        SetBlipRoute(blip.id, blip.route)
+    }
+
 
 }
 
