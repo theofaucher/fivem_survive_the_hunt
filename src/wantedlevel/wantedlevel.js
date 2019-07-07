@@ -8,6 +8,8 @@ let startTime = 0
 let endTime = 0
 let dateSubtraction = 0
 let notificationContent
+let Displayoftheremainingtimefor2stars
+let Displayoftheremainingtimefor3stars
 var lockDateTo2Wanted = false
 var lockDateTo3Wanted = false
 
@@ -35,9 +37,16 @@ setInterval(function () {
 
                 notificationContent = `In maximum ${60 - dateSubtraction} second(s), you no longer have the corps`
 
+                Displayoftheremainingtimefor2stars = setTick(() => {
+
+                    drawTxt(notificationContent, 4, 0.5, 0.5, 0.5)
+
+                })
+
                 if (dateSubtraction == 60) {
 
                     ClearPlayerWantedLevel()
+                    clearTick(Displayoftheremainingtimefor2stars);
                     lockDateTo2Wanted = false
                     lockDateTo3Wanted = false
                     startTime = 0
@@ -67,10 +76,17 @@ setInterval(function () {
                 console.log(dateSubtraction)
     
                 notificationContent = `In maximum ${30 - dateSubtraction} second(s), you no longer have the corps`
+
+                Displayoftheremainingtimefor3stars = setTick(() => {
+
+                    drawTxt(notificationContent, 4, 0.5, 0.5, 0.5)
+
+                })
     
                     if (dateSubtraction == 30){
                         
                         ClearPlayerWantedLevel()
+                        clearTick(Displayoftheremainingtimefor3stars);
                         lockDateTo2Wanted = false
                         lockDateTo3Wanted = false
                         startTime = 0
@@ -94,10 +110,11 @@ setInterval(function () {
     }
 
 }, 500)
-/*function drawTxt(content, font, colour, scale, x, y){
+
+function drawTxt(content, font, scale, x, y){
     SetTextFont(font)
     SetTextScale(scale, scale)
-    SetTextColour(colour[1],colour[2],colour[3], 255)
+    SetTextColour(255,255,255, 255)
     SetTextEntry("STRING")
     SetTextDropShadow(0, 0, 0, 0,255)
     SetTextDropShadow()
@@ -105,4 +122,4 @@ setInterval(function () {
     SetTextOutline()
     AddTextComponentString(content)
     DrawText(x, y)
-}*/
+}
