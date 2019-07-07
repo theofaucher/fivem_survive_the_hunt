@@ -1,3 +1,5 @@
+import { isArray } from "util";
+
 let blips = {
     chaseZone: {
         type: 'radius',
@@ -11,7 +13,8 @@ let blips = {
         coords: [45, 0, 0],
         sprite: 'radar_poi',
         name: 'TEST BLIP',
-        category: 2
+        category: 2,
+        players: GetPlayerFromIndex(0),
     }
 }
 
@@ -24,19 +27,37 @@ const defaultBlip = {
 
 on('setBlip', (blipName, blip) => {
     Object.assign(blips[blipName], blip) // Update blip infos
-    emitNet('setBlip', -1, blipName, blip)// Send them to the clients
+    if (typeof blips[blipName].players !== 'undefined') {
+        
+        if (isArray(blips[blipName].players)) {
+            blips[blipName].players.forEach(player => {
+                emitNet('setBlip', player, blipName, blips[blipName])// Send them to the clients
+            });
+        }else{
+            emitNet('setBlip', player, blipName, blips[blipName])// Send them to the clients
+        }
+
+    } else {
+        emitNet('setBlip', -1, blipName, blips[blipName])// Send them to the clients
+    }
+
 })
 
 on('removeBlip', (blipName) => {
     delete blips[blipName]
-    emitNet('setBlip', -1, blipName, blip)// Send them to the clients
+    emitNet('removeBlip', -1, blipName)// Send them to the clients
 })
 
 onNet('playerConnected', () => {
-    let playerId = GetPlayerFromIndex(0)
+    let playerId = source
 
     Object.keys(blips).forEach(blipName => {
-        emitNet('setBlip', playerId, blipName, blips[blipName])
+        if (typeof blips[blipName].players == 'undefined'){
+            emitNet('setBlip', playerId, blipName, blips[blipName])
+        }else if ((isArray(blips[blipName].players) && blips[blipName].players.includes(playerId)) ||  blips[blipName].players == playerId ){
+            emitNet('setBlip', playerId, blipName, blips[blipName])
+        }
+        
     })
 
 })

@@ -1,6 +1,6 @@
 let blips = {}
 
-import {blipsSprites} from '../hashes/blips'
+import { blipsSprites } from '../hashes/blips'
 
 function SetBlip(blip) {
     switch (blip.type) {
@@ -14,8 +14,8 @@ function SetBlip(blip) {
             if (typeof blip.id == 'undefined') {
                 blip.id = AddBlipForCoord(0, 0, 0)
             }
-            if (typeof blip.sprite !== 'undefined'){
-                SetBlipSprite(blip.id,blipsSprites[blip.sprite])
+            if (typeof blip.sprite !== 'undefined') {
+                SetBlipSprite(blip.id, blipsSprites[blip.sprite])
             }
 
             break;
@@ -40,13 +40,13 @@ function SetBlip(blip) {
         SetBlipAlpha(blip.id, blip.alpha)
     }
 
-    if (typeof blip.name !== 'undefined'){
+    if (typeof blip.name !== 'undefined') {
         BeginTextCommandSetBlipName("STRING")
         AddTextComponentString(blip.name)
         EndTextCommandSetBlipName(blip.id)
     }
 
-    if ( typeof blip.category !== 'undefined'){
+    if (typeof blip.category !== 'undefined') {
         SetBlipCategory(blip.id, blip.category)
     }
 
@@ -62,4 +62,11 @@ onNet('setBlip', (blipName, blip) => {
         console.log(e)
     }
 
+})
+
+onNet('removeBlip', (blipName) => {
+    if (typeof (blips[blipName]) !== 'undefined') {
+        RemoveBlip(blips[blipName].id)
+        delete blips[blipName]
+    }
 })
