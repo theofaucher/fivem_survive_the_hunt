@@ -21,6 +21,12 @@ function SetBlip(blip) {
             break;
 
         default:
+            if (typeof blip.id == 'undefined') {
+                blip.id = AddBlipForCoord(0, 0, 0)
+            }
+            if (typeof blip.sprite !== 'undefined') {
+                SetBlipSprite(blip.id, blipsSprites[blip.sprite])
+            }
             break;
     }
 
@@ -48,6 +54,10 @@ function SetBlip(blip) {
 
     if (typeof blip.category !== 'undefined') {
         SetBlipCategory(blip.id, blip.category)
+    }
+
+    if (typeof blip.route !== 'undefined') {
+        SetBlipRoute(blip.id, blip.route)
     }
 
 
