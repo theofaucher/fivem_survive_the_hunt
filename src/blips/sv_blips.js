@@ -1,21 +1,6 @@
 import { isArray } from "util";
 
 let blips = {
-    chaseZone: {
-        type: 'radius',
-        colour: 26,
-        alpha: 128,
-        coords: [0, 0, 0],
-        scale: 50
-    },
-    defaultBlip: {
-        type: 'blip',
-        coords: [45, 0, 0],
-        sprite: 'radar_poi',
-        name: 'TEST BLIP',
-        category: 2,
-        players: GetPlayerFromIndex(0),
-    }
 }
 
 const defaultBlip = {
