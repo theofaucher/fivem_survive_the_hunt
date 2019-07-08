@@ -10,7 +10,8 @@ async function main() {
     await spawnLib.randomizePed(PlayerId()) // Change Skin
 
     RequestCollisionAtCoord(0, 0, 0) // Load collisions
-    SetEntityCoordsNoOffset(GetPlayerPed(), 0, 0, 0, false, false, false) //Initial Position ( game doesn't work if you dont have one)
+    //SetEntityCoordsNoOffset(GetPlayerPed(), 0, 0, 0, false, false, false) //Initial Position ( game doesn't work if you dont have one)
+    SetEntityCoords(PlayerPedId(),0,0,0,false,false,false,false)
 
     NetworkSetFriendlyFireOption(true)//PvP
     SetCanAttackFriendly(PlayerPedId(), true, true)
