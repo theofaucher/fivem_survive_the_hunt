@@ -46,8 +46,21 @@ let zoneBlip = {
 
 let config = {} // Configuration, will contain the configuration of the gamemode from the convars
 
-onNet('playerConnected', () => { // Triggered when a player has finished loading
+let playersBugCheckIntervals = {}
+
+function playerBugCheck(playerId){
+    if (!DoesEntityExist(GetPlayerPed(playerId))){
+        DropPlayer(playerId, "Due to a bug in FiveM, you need to restart your game( not disconnect and reconnect ) to be able to play on this server")
+    } 
+}
+
+
+
+onNet('playerConnected', async() => { // Triggered when a player has finished loading
     let playerId = source
+
+    
+
     console.log(`${GetPlayerName(playerId)} connected!`)
     emitNet('notify', -1, `~b~${GetPlayerName(playerId)}~s~ has connected`)
 
@@ -69,11 +82,14 @@ onNet('playerConnected', () => { // Triggered when a player has finished loading
         emitNet('notify', playerId, `The game started! Kill ~b~${GetPlayerName(chased)}~s~ to win!`) //Notify ( to improve 
         emitNet('giveWeapons', playerId, huntersWeapons, true) // Give weapons 
     }
+    while (!DoesEntityExist(GetPlayerPed(playerId))) await Delay(500)
+    playersBugCheckIntervals[playerId] = setInterval(playerBugCheck.bind(null,playerId),1000)
 
 })
 
 on('playerDropped', (reason) => {
     let playerId = source
+    clearInterval(playersBugCheckIntervals[playerId])
     console.log(`${GetPlayerName(source)} disconnected :  ${reason}`)
     emitNet('notify', -1, `${GetPlayerName(source)} disconnected`)
     if (isGameStarted) {
