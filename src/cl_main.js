@@ -16,6 +16,8 @@ async function main() {
     NetworkSetFriendlyFireOption(true)//PvP
     SetCanAttackFriendly(PlayerPedId(), true, true)
 
+    SetAutoGiveParachuteWhenEnterPlane(PlayerId(),true)
+
     ShutdownLoadingScreen()
     emitNet('playerConnected')
 }
