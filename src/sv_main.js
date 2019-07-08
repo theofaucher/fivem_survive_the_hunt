@@ -158,7 +158,7 @@ function updateConfig(){ // get config from server cfgs ( normally : survive_the
     config.min_players = GetConvarInt('min_players', 20)
     config.maxZoneScale = GetConvarInt('maxZoneSize', 1000)
     config.zoneDelayBetweenChanges = GetConvarInt('zoneDelayBetweenChanges', 60)
-    config.zoneScaleStep = GetConvarInt('zoneScaleStep', 50)
+    config.zoneScaleStep = GetConvarInt('zoneScaleStep', 100)
 }
 updateConfig()
 setInterval(updateConfig,1000) // update every second
