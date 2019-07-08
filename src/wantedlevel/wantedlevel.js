@@ -32,13 +32,13 @@ setInterval(function () {
 
                 console.log(dateSubtraction)
 
-                notificationContent = `In maximum ${60 - dateSubtraction} second(s), you no longer have the corps`
+                notificationContent = `Calling Lester to clear your wanted level in ${60 - dateSubtraction} second(s)`
 
-                if (typeof Displayoftheremainingtimefor3stars == 'undefined') {
+                if (typeof Displayoftheremainingtimefor2stars == 'undefined') {
 
                     Displayoftheremainingtimefor2stars = setTick(() => {
 
-                        drawTxt(notificationContent, 4, 0.5, 0.5, 0.5)
+                        drawTxt(notificationContent, 4, 0.5, 0.17, 0.94)
 
                     })
 
@@ -48,6 +48,7 @@ setInterval(function () {
 
                     ClearPlayerWantedLevel(PlayerId())
                     clearTick(Displayoftheremainingtimefor2stars);
+                    clearTick(Displayoftheremainingtimefor3stars);
                     Displayoftheremainingtimefor3stars = undefined
                     Displayoftheremainingtimefor2stars = undefined
                     lockDateTo2Wanted = false
@@ -78,7 +79,7 @@ setInterval(function () {
 
                 console.log(dateSubtraction)
 
-                notificationContent = `In maximum ${30 - dateSubtraction} second(s), you no longer have the corps`
+                notificationContent = `Calling Lester to clear your wanted level in ${30 - dateSubtraction} second(s)`
 
                 if (typeof Displayoftheremainingtimefor3stars == 'undefined') {
 
@@ -94,6 +95,7 @@ setInterval(function () {
 
                     ClearPlayerWantedLevel(PlayerId())
                     clearTick(Displayoftheremainingtimefor3stars);
+                    clearTick(Displayoftheremainingtimefor2stars);
                     Displayoftheremainingtimefor3stars = undefined
                     Displayoftheremainingtimefor2stars = undefined
                     lockDateTo2Wanted = false
