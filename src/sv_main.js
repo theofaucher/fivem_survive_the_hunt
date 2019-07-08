@@ -3,6 +3,7 @@ import { huntersSpawnpoints } from './spawnpoints/hunters'
 import { chasedSpawnpoints } from './spawnpoints/chased'
 import { getPlayers } from './utils/sv_players'
 import { Delay } from './utils/wait'
+import { getRandomArbitrary } from './utils/random'
 let chased;
 let hunters = [];
 let isGameStarted = false;
@@ -21,6 +22,16 @@ const huntersWeapons = [
         ammo: 1
     }
 ]
+
+let zoneInterval
+let zoneLastChanged
+let zoneBlip = {
+    type: 'radius',
+    alpha: 128,
+    coords: [0, 0, 0],
+    scale: 1000,
+    colour: 26,
+}
 
 onNet('playerConnected', () => {
     let playerId = source
@@ -41,30 +52,47 @@ onNet('playerConnected', () => {
 })
 
 on('startGame', () => {
-    hunters = getPlayers()
+    if (!isGameStarted) {
+        hunters = getPlayers()
 
-    let rand = Math.floor(Math.random() * hunters.length)
+        let rand = Math.floor(Math.random() * hunters.length)
 
-    chased = hunters[rand]
-    hunters.splice(rand, 1)
+        chased = hunters[rand]
+        hunters.splice(rand, 1)
 
-    console.log(`Game started, chased : ${GetPlayerName(chased)}`)
+        console.log(`Game started, chased : ${GetPlayerName(chased)}`)
 
-    emitNet('spawn', chased, chasedSpawnpoints[Math.floor(Math.random() * chasedSpawnpoints.length)], true)
-    emitNet('giveWeapons', chased)
-    emitNet('notify', chased, "The game started! you are ~r~chased~s~!~n~RUN!")
+        emitNet('spawn', chased, chasedSpawnpoints[Math.floor(Math.random() * chasedSpawnpoints.length)], true)
+        emitNet('giveWeapons', chased)
+        emitNet('notify', chased, "The game started! you are ~r~chased~s~!~n~RUN!")
 
 
-    let locations = huntersSpawnpoints
-    hunters.forEach(hunter => {
-        let locationIdx = Math.floor(Math.random() * locations.length)
-        emitNet('spawn', hunter, locations[locationIdx])
-        locations.splice(locationIdx, 1)
-        emitNet('giveWeapons', huntersWeapons, true)
-        emitNet('notify', hunter, `The game started! Kill ~b~${GetPlayerName(chased)}~s~ to win!`)
-    })
-    isGameStarted = true
-    startTime = Date.now()
+        let locations = huntersSpawnpoints
+        hunters.forEach(hunter => {
+            let locationIdx = Math.floor(Math.random() * locations.length)
+            emitNet('spawn', hunter, locations[locationIdx])
+            locations.splice(locationIdx, 1)
+            emitNet('giveWeapons', huntersWeapons, true)
+            emitNet('notify', hunter, `The game started! Kill ~b~${GetPlayerName(chased)}~s~ to win!`)
+        })
+        isGameStarted = true
+        startTime = Date.now()
+        zoneLastChanged = Date.now()
+
+        zoneInterval = setInterval(() => {
+            if ((Date.now() - zoneLastChanged) / 1000 > GetConvarInt('zoneDelayBetweenChanges', 60)) {
+
+                zoneLastChanged = Date.now()
+                let chasedCoords = GetEntityCoords(GetPlayerPed(chased))
+                if (zoneBlip.scale > GetConvarInt('zoneSizeStep', 50)) zoneBlip.scale -= GetConvarInt('zoneSizeStep', 50)
+                zoneBlip.coords[0] = chasedCoords[0] + zoneBlip.scale * getRandomArbitrary(-0.7, 0.7)
+                zoneBlip.coords[1] = chasedCoords[1] + zoneBlip.scale * getRandomArbitrary(-0.7, 0.7)
+                emit('setBlip', 'chasedZone', zoneBlip)
+
+            }
+        }, 500)
+
+    }
 })
 
 onNet('events:playerDied', async () => {
@@ -99,11 +127,11 @@ onNet('events:playerDied', async () => {
 
 on('gameEnd', (huntersWon) => {
     isGameStarted = false
+    clearInterval(zoneInterval)
+    emit('removeBlip','chasedZone')
 
     let locations = huntersSpawnpoints
     let timeSurvived = new Date(Date.now() - startTime)
-    scoreboard.push([chased, timeSurvived])
-
 
     getPlayers().forEach(player => {
         let locationIdx = Math.floor(Math.random() * locations.length)
