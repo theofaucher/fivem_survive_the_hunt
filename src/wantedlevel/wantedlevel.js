@@ -2,8 +2,6 @@
 
 import './../events/death.js'
 
-
-
 let startTime = 0
 let endTime = 0
 let dateSubtraction = 0
@@ -15,11 +13,11 @@ var lockDateTo3Wanted = false
 
 setInterval(function () {
 
-    if (!IsPlayerDead()) {
+    if (!IsPlayerDead(PlayerId())) {
 
-        if (GetPlayerWantedLevel() >= 2) {
+        if (GetPlayerWantedLevel(PlayerId()) >= 2) {
 
-            if (GetPlayerWantedLevel() == 2) {
+            if (GetPlayerWantedLevel(PlayerId()) == 2) {
 
                 if (lockDateTo2Wanted == false) {
                     startTime = Date.now()
@@ -30,7 +28,6 @@ setInterval(function () {
                 }
 
                 endTime = Date.now()
-
                 dateSubtraction = Math.round((endTime - startTime) / 1000);
 
                 console.log(dateSubtraction)
@@ -49,7 +46,7 @@ setInterval(function () {
 
                 if (dateSubtraction == 60) {
 
-                    ClearPlayerWantedLevel()
+                    ClearPlayerWantedLevel(PlayerId())
                     clearTick(Displayoftheremainingtimefor2stars);
                     Displayoftheremainingtimefor3stars = undefined
                     Displayoftheremainingtimefor2stars = undefined
@@ -64,7 +61,7 @@ setInterval(function () {
             }
 
 
-            if (GetPlayerWantedLevel() == 3) {
+            if (GetPlayerWantedLevel(PlayerId()) == 3) {
 
                 if (lockDateTo3Wanted == false) {
 
@@ -95,7 +92,7 @@ setInterval(function () {
 
                 if (dateSubtraction == 30) {
 
-                    ClearPlayerWantedLevel()
+                    ClearPlayerWantedLevel(PlayerId())
                     clearTick(Displayoftheremainingtimefor3stars);
                     Displayoftheremainingtimefor3stars = undefined
                     Displayoftheremainingtimefor2stars = undefined
@@ -111,7 +108,7 @@ setInterval(function () {
 
         }
 
-        if (GetPlayerWantedLevel() >= 4) {
+        if (GetPlayerWantedLevel(PlayerId()) >= 4) {
 
             SetPlayerWantedLevel(PlayerId(), 3, 0)
             SetPlayerWantedLevelNow(PlayerId(), 0)
