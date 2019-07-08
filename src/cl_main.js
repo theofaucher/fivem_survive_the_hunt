@@ -56,3 +56,7 @@ onNet('notify', async (text) => {
     let notification = DrawNotification(true, true)
 
 })
+
+onNet('clearMap', (x=0,y=0,z=0,radius=10000)=>{
+    ClearAreaOfEverything(x,y,z,radius)
+})
