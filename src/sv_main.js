@@ -72,7 +72,7 @@ on('startGame', () => {
             let locationIdx = Math.floor(Math.random() * locations.length)
             emitNet('spawn', hunter, locations[locationIdx])
             locations.splice(locationIdx, 1)
-            emitNet('giveWeapons', huntersWeapons, true)
+            emitNet('giveWeapons', hunter, huntersWeapons, true)
             emitNet('notify', hunter, `The game started! Kill ~b~${GetPlayerName(chased)}~s~ to win!`)
         })
         isGameStarted = true
@@ -126,9 +126,10 @@ onNet('events:playerDied', async () => {
 })
 
 on('gameEnd', (huntersWon) => {
+
     isGameStarted = false
     clearInterval(zoneInterval)
-    emit('removeBlip','chasedZone')
+    emit('removeBlip', 'chasedZone')
 
     let locations = huntersSpawnpoints
     let timeSurvived = new Date(Date.now() - startTime)
@@ -137,7 +138,7 @@ on('gameEnd', (huntersWon) => {
         let locationIdx = Math.floor(Math.random() * locations.length)
         emitNet('spawn', player, locations[locationIdx])
         locations.splice(locationIdx, 1)
-        emitNet('giveWeapons', huntersWeapons, true)
+        emitNet('giveWeapons', player, huntersWeapons, true)
     })
 
     if (huntersWon) {
