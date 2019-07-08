@@ -4,6 +4,7 @@ import { chasedSpawnpoints } from './spawnpoints/chased'
 import { getPlayers } from './utils/sv_players'
 import { Delay } from './utils/wait'
 import { getRandomArbitrary } from './utils/random'
+import './blips/sv_blips'
 let chased;
 let hunters = [];
 let isGameStarted = false;
@@ -23,6 +24,16 @@ const huntersWeapons = [
     }
 ]
 
+let huntersHQ = huntersSpawnpoints.lifeinvader
+huntersHQ.blip = {
+    type: 'blip',
+    coords: huntersHQ.location,
+    name: 'Hunters HQ',
+    sprite: 'radar_rampage',
+    colour: 1
+}
+emit('setBlip', 'huntersHQ', huntersHQ.blip)
+
 let zoneInterval
 let zoneLastChanged
 let zoneBlip = {
@@ -38,18 +49,34 @@ let config = {} // Configuration, will contain the configuration of the gamemode
 onNet('playerConnected', () => { // Triggered when a player has finished loading
     let playerId = source
     console.log(`${GetPlayerName(playerId)} connected!`)
+    emitNet('notify', -1, `~b~${GetPlayerName(playerId)}~s~ has connected`)
 
-    let location = huntersSpawnpoints[Math.floor(Math.random() * huntersSpawnpoints.length)] //Get a random spawn point
-    emitNet('spawn', playerId, location) // Force player respawn
-    emitNet('giveWeapons', playerId, huntersWeapons) // Give weapons 
+    if (!isGameStarted) {
+        if (GetNumPlayerIndices() >= config.min_players) { // enough players to start a game 
+            emit('startGame')
+        } else {
+            let location = huntersHQ.spawnpoints[Math.floor(Math.random() * huntersHQ.spawnpoints.length)] //Get a random spawn point
+            emitNet('spawn', playerId, location) // Force player respawn
+            emitNet('giveWeapons', playerId, huntersWeapons, true) // Give weapons 
+            emitNet('notify', -1, `Game will start when ~b~${config.min_players}~s~ players will be connected (~r~${config.min_players - GetNumPlayerIndices()}~s~ to go)`) // Notify everyone 
+        }
 
-    emitNet('notify', -1, `~b~${GetPlayerName(playerId)}~s~ has connected`) // Notify everyone
-
-
-    if (GetNumPlayerIndices() >= config.min_players) { // enough players to start a game 
-        emit('startGame')
     } else {
-        emitNet('notify', -1, `Game will start when ~b~${config.min_players}~s~ players will be connected (~r~${config.min_players - GetNumPlayerIndices()}~s~ to go)`) // Notify everyone 
+        hunters.push(playerId)
+        emit('notify', `${GetPlayerName(playerId)} joined the ~r~hunters`)
+        let location = huntersHQ.spawnpoints[Math.floor(Math.random() * huntersHQ.spawnpoints.length)] //Get a random spawn point
+        emitNet('spawn', playerId, location) // Force player respawn
+        emitNet('giveWeapons', playerId, huntersWeapons, true) // Give weapons 
+    }
+
+})
+
+on('playerDropped', (reason) => {
+    let playerId = source
+    console.log(`${GetPlayerName(source)} disconnected :  ${reason}`)
+    emitNet('notify', -1, `${GetPlayerName(source)} disconnected`)
+    if (isGameStarted) {
+        playerQuittedTheGame(playerId, reason)
     }
 })
 
@@ -63,13 +90,14 @@ on('startGame', () => {
         hunters.splice(rand, 1) // Remove the chased from the hunters
 
         console.log(`Game started, chased : ${GetPlayerName(chased)}`)
+        emitNet('clearMap', -1, huntersHQ.location[0], huntersHQ.location[1], huntersHQ.location[2], 500)
 
         emitNet('spawn', chased, chasedSpawnpoints[Math.floor(Math.random() * chasedSpawnpoints.length)], true) //Spawn the chased
         emitNet('giveWeapons', chased) //Give him all weapons
-        emitNet('notify', chased, "The game started! you are ~r~chased~s~!~n~RUN!") //Notify the chased ( to improve )
+        emitNet('notify', chased, "The game started! you are ~b~chased~s~!") //Notify the chased ( to improve )
 
 
-        let locations = huntersSpawnpoints 
+        let locations = huntersHQ.spawnpoints
         hunters.forEach(hunter => { //Respawn all the hunters 
             let locationIdx = Math.floor(Math.random() * locations.length) // Get a random spawnpoint 
             emitNet('spawn', hunter, locations[locationIdx])
@@ -80,20 +108,19 @@ on('startGame', () => {
         isGameStarted = true // Set game as started 
         startTime = Date.now() // Game Start time 
         zoneLastChanged = Date.now()
-
         zoneInterval = setInterval(() => { //zone updater
-            if ((Date.now() - zoneLastChanged) / 1000 > config.zoneDelayBetweenChanges ) { // check if zone must be updated
-
-                zoneLastChanged = Date.now() // set last change to now
-                let chasedCoords = GetEntityCoords(GetPlayerPed(chased))
-                let dist = Math.sqrt((chasedCoords[0] - zoneBlip.coords[0])**2 + (chasedCoords[1] - zoneBlip.coords[1])**2 ) // distance between chased and zone center
-                if ( dist > zoneBlip.scale){ // if out of zone 
-                    zoneBlip.scale = config.maxZoneScale // reset sone to max scale
-                } else if (zoneBlip.scale > config.zoneScaleStep ) zoneBlip.scale -= config.zoneScaleStep // else shrink zone
-                zoneBlip.coords[0] = chasedCoords[0] + zoneBlip.scale * getRandomArbitrary(-0.7, 0.7) // get new x coords for zone
-                zoneBlip.coords[1] = chasedCoords[1] + zoneBlip.scale * getRandomArbitrary(-0.7, 0.7) // get new y coords for zone
-                emit('setBlip', 'chasedZone', zoneBlip) // update zone 
-
+            if ((Date.now() - zoneLastChanged) / 1000 > config.zoneDelayBetweenChanges) { // check if zone must be updated
+                try {
+                    zoneLastChanged = Date.now() // set last change to now
+                    let chasedCoords = GetEntityCoords(GetPlayerPed(chased))
+                    let dist = Math.sqrt((chasedCoords[0] - zoneBlip.coords[0]) ** 2 + (chasedCoords[1] - zoneBlip.coords[1]) ** 2) // distance between chased and zone center
+                    if (dist > zoneBlip.scale) { // if out of zone 
+                        zoneBlip.scale = config.maxZoneScale // reset sone to max scale
+                    } else if (zoneBlip.scale > config.zoneScaleStep) zoneBlip.scale -= config.zoneScaleStep // else shrink zone
+                    zoneBlip.coords[0] = chasedCoords[0] + zoneBlip.scale * getRandomArbitrary(-0.7, 0.7) // get new x coords for zone
+                    zoneBlip.coords[1] = chasedCoords[1] + zoneBlip.scale * getRandomArbitrary(-0.7, 0.7) // get new y coords for zone
+                    emit('setBlip', 'chasedZone', zoneBlip) // update zone 
+                } catch (e) { console.log(e) }
             }
         }, 500)
 
@@ -106,27 +133,13 @@ onNet('events:playerDied', async () => { //player died
 
     if (isGameStarted) { // ingame
 
-        if (hunters.includes(playerId.toString())) { // is a hunter 
-
-            hunters.splice(hunters.indexOf(playerId), 1) // remove from hunters
-
-            if (hunters.length > 0) { // there are hunters still in game
-                emitNet('notify', -1, `~r~${GetPlayerName(playerId)}~s~ died ~r~${hunters.length}~s~ hunters left`)
-            } else { // no hunter left 
-                emit('gameEnd', false) // endgame, hunters loose
-            }
-
-        }
-
-        if (playerId == chased) { // chased died
-            emit('gameEnd', true) // hunters win 
-        }
+        playerQuittedTheGame(playerId)
 
     } else { // in "lobby"
         console.log(`${GetPlayerName(playerId)} died`)
         await Delay(5000) // wait 5 sec 
-        let locationIdx = Math.floor(Math.random() * huntersSpawnpoints.length) // select spawn
-        emitNet('spawn', playerId, huntersSpawnpoints[locationIdx]) // respawn 
+        let locationIdx = Math.floor(Math.random() * huntersHQ.spawnpoints.length) // select spawn
+        emitNet('spawn', playerId, huntersHQ.spawnpoints[locationIdx]) // respawn 
     }
 })
 
@@ -136,7 +149,7 @@ on('gameEnd', (huntersWon) => { // game ended
     clearInterval(zoneInterval) // stop zone interval
     emit('removeBlip', 'chasedZone') // remove zone blip
 
-    let locations = huntersSpawnpoints
+    let locations = huntersHQ.spawnpoints
     let timeSurvived = new Date(Date.now() - startTime)
 
     getPlayers().forEach(player => { // respawn players
@@ -154,11 +167,33 @@ on('gameEnd', (huntersWon) => { // game ended
 
 })
 
-function updateConfig(){ // get config from server cfgs ( normally : survive_the_hunt.cfg  )
+function updateConfig() { // get config from server cfgs ( normally : survive_the_hunt.cfg  )
     config.min_players = GetConvarInt('min_players', 20)
     config.maxZoneScale = GetConvarInt('maxZoneSize', 1000)
     config.zoneDelayBetweenChanges = GetConvarInt('zoneDelayBetweenChanges', 60)
     config.zoneScaleStep = GetConvarInt('zoneScaleStep', 100)
 }
 updateConfig()
-setInterval(updateConfig,1000) // update every second
+setInterval(updateConfig, 1000) // update every second
+
+async function playerQuittedTheGame(playerId, reason = 'died') {
+    if (isGameStarted) {
+        if (hunters.includes(playerId.toString())) { // is a hunter 
+
+            hunters.splice(hunters.indexOf(playerId), 1) // remove from hunters
+
+            if (hunters.length > 0) { // there are hunters still in game
+                emitNet('notify', -1, `~r~${GetPlayerName(playerId)}~s~ ${reason} ~r~${hunters.length}~s~ hunters left`)
+            } else { // no hunter left
+                await Delay(5000)
+                emit('gameEnd', false) // endgame, hunters loose
+            }
+
+        }
+
+        if (playerId == chased) { // chased died
+            await Delay(5000)
+            emit('gameEnd', true) // hunters win 
+        }
+    }
+}
