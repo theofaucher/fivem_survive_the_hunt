@@ -84,7 +84,7 @@ on('startGame', () => {
 
                 zoneLastChanged = Date.now()
                 let chasedCoords = GetEntityCoords(GetPlayerPed(chased))
-                let dist = Math.sqrt((chasedCoords[0] - zoneBlip.coords[0])**2 + (chasedCoords[1] - zoneBlip.coords[1])**2 ) //MAY BE BROKEN
+                let dist = Math.sqrt((chasedCoords[0] - zoneBlip.coords[0])**2 + (chasedCoords[1] - zoneBlip.coords[1])**2 )
                 if ( dist > zoneBlip.scale){
                     zoneBlip.scale = GetConvarInt('maxZoneSize', 1000)
                 } else if (zoneBlip.scale > GetConvarInt('zoneSizeStep', 50)) zoneBlip.scale -= GetConvarInt('zoneSizeStep', 50)
