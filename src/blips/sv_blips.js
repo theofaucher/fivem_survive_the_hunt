@@ -11,6 +11,7 @@ const defaultBlip = {
 }
 
 on('setBlip', (blipName, blip) => {
+    if ( typeof blips[blipName] == 'undefined' ) blips[blipName] = {}
     Object.assign(blips[blipName], blip) // Update blip infos
     if (typeof blips[blipName].players !== 'undefined') {
         
