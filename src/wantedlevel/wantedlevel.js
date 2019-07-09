@@ -23,6 +23,13 @@ setInterval(async function () {
             clearTick(Displayoftheremainingtimefor2stars);
             Displayoftheremainingtimefor3stars = undefined
             Displayoftheremainingtimefor2stars = undefined
+
+            notificationContent = `Cancelled Lester call !`
+
+            SetNotificationTextEntry("STRING")
+            AddTextComponentString(notificationContent)
+            let notification = DrawNotification(true, true)
+
             lockDateTo2Wanted = false
             lockDateTo3Wanted = false
             startTime = 0
