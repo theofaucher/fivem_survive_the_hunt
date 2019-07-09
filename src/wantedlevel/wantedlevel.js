@@ -8,12 +8,29 @@ let dateSubtraction = 0
 let notificationContent
 let Displayoftheremainingtimefor2stars 
 let Displayoftheremainingtimefor3stars
+let DisplayLesterCalledfor3stars
 var lockDateTo2Wanted = false
 var lockDateTo3Wanted = false
 
-setInterval(function () {
+setInterval(async function () {
 
     if (!IsPlayerDead(PlayerId())) {
+
+        if (!GetPlayerWantedLevel(PlayerId()))
+        {
+            
+            clearTick(Displayoftheremainingtimefor3stars);
+            clearTick(Displayoftheremainingtimefor2stars);
+            Displayoftheremainingtimefor3stars = undefined
+            Displayoftheremainingtimefor2stars = undefined
+            lockDateTo2Wanted = false
+            lockDateTo3Wanted = false
+            startTime = 0
+            endTime = 0
+            dateSubtraction = 0
+
+        }
+
 
         if (GetPlayerWantedLevel(PlayerId()) >= 2) {
 
@@ -50,7 +67,14 @@ setInterval(function () {
                     clearTick(Displayoftheremainingtimefor2stars);
                     clearTick(Displayoftheremainingtimefor3stars);
                     Displayoftheremainingtimefor3stars = undefined
-                    Displayoftheremainingtimefor2stars = undefined
+                    Displayoftheremainingtimefor2stars = undefined    
+                    
+                    notificationContent = `Lester called !`
+
+                    SetNotificationTextEntry("STRING")
+                    AddTextComponentString(notificationContent)
+                    let notification = DrawNotification(true, true)
+
                     lockDateTo2Wanted = false
                     lockDateTo3Wanted = false
                     startTime = 0
@@ -98,6 +122,13 @@ setInterval(function () {
                     clearTick(Displayoftheremainingtimefor2stars);
                     Displayoftheremainingtimefor3stars = undefined
                     Displayoftheremainingtimefor2stars = undefined
+
+                    notificationContent = `Lester called !`
+
+                    SetNotificationTextEntry("STRING")
+                    AddTextComponentString(notificationContent)
+                    let notification = DrawNotification(true, true)
+
                     lockDateTo2Wanted = false
                     lockDateTo3Wanted = false
                     startTime = 0
@@ -117,6 +148,20 @@ setInterval(function () {
 
         }
 
+
+    }
+
+    if (IsPlayerDead(PlayerId())) {
+
+        clearTick(Displayoftheremainingtimefor3stars);
+        clearTick(Displayoftheremainingtimefor2stars);
+        Displayoftheremainingtimefor3stars = undefined
+        Displayoftheremainingtimefor2stars = undefined
+        lockDateTo2Wanted = false
+        lockDateTo3Wanted = false
+        startTime = 0
+        endTime = 0
+        dateSubtraction = 0
 
     }
 
