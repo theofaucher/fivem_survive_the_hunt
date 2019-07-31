@@ -9,11 +9,13 @@ function SetBlip(blip) {
                 blip.id = AddBlipForRadius(0, 0, 0, 0)
             }
 
-            if (blip.shrink && typeof blip.shrinkInterval == 'undefined'){
-                blip.shrinkInterval = setInterval(()=>{
-                    blip.scale -= blip.shrinkSpeed / 10
-                    SetBlipScale(blip.id,blip.scale)
-                },100)
+            if (blip.shrink && typeof blip.shrinkInterval == 'undefined') {
+                blip.shrinkInterval = setInterval(() => {
+                    if (blip.scale > 0) {
+                        blip.scale -= blip.shrinkSpeed / 100
+                        SetBlipScale(blip.id, blip.scale)
+                    }
+                }, 10)
             }
 
             break;
@@ -83,10 +85,11 @@ onNet('setBlip', (blipName, blip) => {
 
 onNet('removeBlip', (blipName) => {
     if (typeof (blips[blipName]) !== 'undefined') {
-        if ( typeof blips[blipName].shrinkInterval != 'undefined'){
+        if (typeof blips[blipName].shrinkInterval != 'undefined') {
             clearInterval(blips[blipName].shrinkInterval)
         }
         RemoveBlip(blips[blipName].id)
         delete blips[blipName]
     }
 })
+

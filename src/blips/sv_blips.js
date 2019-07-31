@@ -20,8 +20,8 @@ export function setBlip(blipName, blip){
 
     if (blips[blipName].shrink == true && typeof blipsIntervals[blipName] == 'undefined' ){
         blipsIntervals[blipName] = setInterval(()=>{
-            blips[blipName].scale -= blips[blipName].shrinkSpeed / 10
-        },100)
+            if (blips[blipName].scale > 0)blips[blipName].scale -= blips[blipName].shrinkSpeed / 100
+        },10)
     }
 
 
