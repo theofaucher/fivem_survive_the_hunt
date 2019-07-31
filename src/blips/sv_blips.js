@@ -3,6 +3,10 @@ import { isArray } from "util";
 let blips = {
 }
 
+let blipsIntervals = {
+
+}
+
 const defaultBlip = {
     type: 'blip',
     alpha: 256,
@@ -10,9 +14,18 @@ const defaultBlip = {
     sprite: 'radar_poi'
 }
 
-on('setBlip', (blipName, blip) => {
+export function setBlip(blipName, blip){
     if ( typeof blips[blipName] == 'undefined' ) blips[blipName] = {}
     Object.assign(blips[blipName], blip) // Update blip infos
+
+    if (blips[blipName].shrink == true && typeof blipsIntervals[blipName] == 'undefined' ){
+        blipsIntervals[blipName] = setInterval(()=>{
+            blips[blipName].scale -= blips[blipName].shrinkSpeed / 10
+        },100)
+    }
+
+
+
     if (typeof blips[blipName].players !== 'undefined') {
         
         if (isArray(blips[blipName].players)) {
@@ -27,12 +40,22 @@ on('setBlip', (blipName, blip) => {
         emitNet('setBlip', -1, blipName, blips[blipName])// Send them to the clients
     }
 
-})
+}
 
-on('removeBlip', (blipName) => {
+export function removeBlip(blipName){
     delete blips[blipName]
     emitNet('removeBlip', -1, blipName)// Send them to the clients
-})
+}
+
+export function getBlipInfo(blipName){
+    return blips[blipName]
+}
+
+export function getBlips(){
+    return blips.keys
+}
+
+
 
 onNet('playerConnected', () => {
     let playerId = source
