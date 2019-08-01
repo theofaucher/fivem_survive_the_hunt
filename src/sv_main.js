@@ -167,7 +167,7 @@ on('gameEnd', (huntersWon) => { // game ended
     emit('removeBlip', 'chasedZone') // remove zone blip
 
     let locations = huntersHQ.spawnpoints
-    let timeSurvived = new Date(Date.now() - startTime)
+    let timeSurvived = new Date(Date.now() - startTime).toISOString().substr(11, 8)
 
     getPlayers().forEach(player => { // respawn players
         let locationIdx = Math.floor(Math.random() * locations.length)
@@ -177,7 +177,7 @@ on('gameEnd', (huntersWon) => { // game ended
     })
 
     if (huntersWon) { //notify 
-        emitNet('notify', -1, `~b~${GetPlayerName(chased)}~s~ survived ${timeSurvived.toISOString().substr(11, 8)}`) // hunters win
+        emitNet('notify', -1, `~b~${GetPlayerName(chased)}~s~ survived ${timeSurvived}`) // hunters win
     } else {
         emitNet('notify', -1, `~r~Hunters~s~ were so bad that ~b~${GetPlayerName(chased)}~s~ managed to kill them all!`) // chased win
     }

@@ -1,6 +1,7 @@
 /// <reference path="D:\Projets\FiveM\Survive_the_hunt\server-data\autocompletion\typings\index.d.ts" />
 
 import './../events/death.js'
+import { Delay } from '../utils/wait.js';
 
 let startTime = 0
 let endTime = 0
@@ -16,30 +17,32 @@ setInterval(async function () {
 
     if (!IsPlayerDead(PlayerId())) {
 
-        if (!GetPlayerWantedLevel(PlayerId()))
-        {
-            
-            clearTick(Displayoftheremainingtimefor3stars);
-            clearTick(Displayoftheremainingtimefor2stars);
-            Displayoftheremainingtimefor3stars = undefined
-            Displayoftheremainingtimefor2stars = undefined
+        if (GetPlayerWantedLevel(PlayerId()) >= 1) {
 
-            notificationContent = `Cancelled Lester call !`
+                await Delay(100)
 
-            SetNotificationTextEntry("STRING")
-            AddTextComponentString(notificationContent)
-            let notification = DrawNotification(true, true)
-
-            lockDateTo2Wanted = false
-            lockDateTo3Wanted = false
-            startTime = 0
-            endTime = 0
-            dateSubtraction = 0
-
-        }
-
-
-        if (GetPlayerWantedLevel(PlayerId()) >= 2) {
+                if (!GetPlayerWantedLevel(PlayerId()))
+                {
+                    
+                    clearTick(Displayoftheremainingtimefor3stars);
+                    clearTick(Displayoftheremainingtimefor2stars);
+                    Displayoftheremainingtimefor3stars = undefined
+                    Displayoftheremainingtimefor2stars = undefined
+        
+                    notificationContent = `Cancelled Lester call !`
+        
+                    SetNotificationTextEntry("STRING")
+                    AddTextComponentString(notificationContent)
+                    let notification = DrawNotification(true, true)
+        
+                    lockDateTo2Wanted = false
+                    lockDateTo3Wanted = false
+                    startTime = 0
+                    endTime = 0
+                    dateSubtraction = 0
+        
+                }
+        
 
             if (GetPlayerWantedLevel(PlayerId()) == 2) {
 
