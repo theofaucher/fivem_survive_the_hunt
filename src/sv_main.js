@@ -4,7 +4,7 @@ import { chasedSpawnpoints } from './spawnpoints/chased'
 import { getPlayers } from './utils/sv_players'
 import { Delay } from './utils/wait'
 import { getRandomArbitrary } from './utils/random'
-import './blips/sv_blips'
+import * as blips from './blips/sv_blips'
 let chased;
 let hunters = [];
 let isGameStarted = false;
@@ -32,34 +32,47 @@ huntersHQ.blip = {
     sprite: 'radar_rampage',
     colour: 1
 }
-emit('setBlip', 'huntersHQ', huntersHQ.blip)
+blips.setBlip('huntersHQ', huntersHQ.blip)
 
-let zoneInterval
-let zoneLastChanged
-let zoneBlip = {
+let testBlip = {
     type: 'radius',
     alpha: 128,
     coords: [0, 0, 0],
     scale: 1000,
     colour: 26,
+    shrink: true,
+    shrinkSpeed: 1,
+}
+blips.setBlip('testBlip', testBlip)
+
+let zoneInterval
+let zoneLastChanged
+let chaseZone = {
+    type: 'radius',
+    alpha: 128,
+    coords: [0, 0, 0],
+    scale: 1000,
+    colour: 26,
+    shrink: true,
+    shrinkSpeed: 10
 }
 
 let config = {} // Configuration, will contain the configuration of the gamemode from the convars
 
 let playersBugCheckIntervals = {}
 
-function playerBugCheck(playerId){
-    if (!DoesEntityExist(GetPlayerPed(playerId))){
+function playerBugCheck(playerId) {
+    if (!DoesEntityExist(GetPlayerPed(playerId))) {
         DropPlayer(playerId, "Due to a bug in FiveM, you need to restart your game( not disconnect and reconnect ) to be able to play on this server")
-    } 
+    }
 }
 
 
 
-onNet('playerConnected', async() => { // Triggered when a player has finished loading
+onNet('playerConnected', async () => { // Triggered when a player has finished loading
     let playerId = source
 
-    
+
 
     console.log(`${GetPlayerName(playerId)} connected!`)
     emitNet('notify', -1, `~b~${GetPlayerName(playerId)}~s~ has connected`)
@@ -83,7 +96,7 @@ onNet('playerConnected', async() => { // Triggered when a player has finished lo
         emitNet('giveWeapons', playerId, huntersWeapons, true) // Give weapons 
     }
     while (!DoesEntityExist(GetPlayerPed(playerId))) await Delay(500)
-    playersBugCheckIntervals[playerId] = setInterval(playerBugCheck.bind(null,playerId),1000)
+    playersBugCheckIntervals[playerId] = setInterval(playerBugCheck.bind(null, playerId), 1000)
 
 })
 
@@ -123,23 +136,23 @@ on('startGame', () => {
             emitNet('notify', hunter, `The game started! Kill ~b~${GetPlayerName(chased)}~s~ to win!`) //Notify ( to improve )
         })
         isGameStarted = true // Set game as started 
-        startTime = Date.now() // Game Start time 
-        zoneLastChanged = Date.now()
+        startTime = Date.now() // Game Start time
+        blips.setBlip("chaseZone", chaseZone) 
         zoneInterval = setInterval(() => { //zone updater
-            if ((Date.now() - zoneLastChanged) / 1000 > config.zoneDelayBetweenChanges) { // check if zone must be updated
-                try {
-                    zoneLastChanged = Date.now() // set last change to now
-                    let chasedCoords = GetEntityCoords(GetPlayerPed(chased))
-                    let dist = Math.sqrt((chasedCoords[0] - zoneBlip.coords[0]) ** 2 + (chasedCoords[1] - zoneBlip.coords[1]) ** 2) // distance between chased and zone center
-                    if (dist > zoneBlip.scale) { // if out of zone 
-                        zoneBlip.scale = config.maxZoneScale // reset sone to max scale
-                    } else if (zoneBlip.scale > config.zoneScaleStep) zoneBlip.scale -= config.zoneScaleStep // else shrink zone
-                    zoneBlip.coords[0] = chasedCoords[0] + zoneBlip.scale * getRandomArbitrary(-0.7, 0.7) // get new x coords for zone
-                    zoneBlip.coords[1] = chasedCoords[1] + zoneBlip.scale * getRandomArbitrary(-0.7, 0.7) // get new y coords for zone
-                    emit('setBlip', 'chasedZone', zoneBlip) // update zone 
-                } catch (e) { console.log(e) }
-            }
-        }, 500)
+            try {
+                let chasedCoords = GetEntityCoords(GetPlayerPed(chased))
+                let chaseZone = blips.getBlipInfo("chaseZone")
+                let dist = Math.sqrt((chasedCoords[0] - chaseZone.coords[0]) ** 2 + (chasedCoords[1] - chaseZone.coords[1]) ** 2) // distance between chased and zone center
+               
+                if (dist > chaseZone.scale) { // if out of zone 
+                    chaseZone.scale = config.maxZoneScale // reset sone to max scale
+                    chaseZone.coords[0] = chasedCoords[0] + chaseZone.scale * getRandomArbitrary(-0.7, 0.7) // get new x coords for zone
+                    chaseZone.coords[1] = chasedCoords[1] + chaseZone.scale * getRandomArbitrary(-0.7, 0.7) // get new y coords for zone
+                    blips.setBlip("chaseZone", chaseZone) // update zone 
+                }
+                
+            } catch (e) { console.log(e) }
+        }, 100)
 
     }
 })
