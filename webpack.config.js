@@ -1,8 +1,12 @@
 const path = require('path');
+
 module.exports = {
+  target: 'node',
   entry: {
+    
     'init/cl_init': [
 
+      "./src/sv_dev.js",
       "./src/cl_dev.js",
       "./src/deathscreen/deathscreen.js",
       "./src/wantedlevel/wantedlevel.js",
@@ -21,6 +25,7 @@ module.exports = {
     filename: "[name].js",
     path: path.resolve(__dirname, 'resources')
   },
+  
   watch: true,
   mode: 'development',
   devtool: 'inline-source-map',
