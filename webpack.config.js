@@ -6,7 +6,6 @@ module.exports = {
     
     'init/cl_init': [
 
-      "./src/sv_dev.js",
       "./src/cl_dev.js",
       "./src/deathscreen/deathscreen.js",
       "./src/wantedlevel/wantedlevel.js",
@@ -16,6 +15,7 @@ module.exports = {
       "./src/cl_main.js",
     ],
     'init/sv_init': [
+      "./src/sv_dev.js",
       "./src/sv_main.js",
       "./src/sv_commands.js",
       "./src/blips/sv_blips.js"
