@@ -3,6 +3,7 @@ import { WeaponsList } from './hashes/weapons'
 import { spawnPlayerWithTransition, spawnPlayer, randomizePed, setPed } from './utils/spawn'
 import { Delay } from './utils/wait';
 import { huntersSpawnpoints } from './spawnpoints/hunters'
+import {notify} from "./ui/notification"
 RegisterCommand("e", (source, args) => {
     let command = args.join(" ")
     console.log(`Executing: ${command}`)
@@ -183,8 +184,15 @@ RegisterCommand('rs', () => {
     spawnPlayer(PlayerId(), location)
 })
 
+let posFile = "hunters_spawn"
+
+RegisterCommand("posFile", (source, args)=>{
+    let orignialPath = posFile
+    posFile = typeof args[0] == 'undefined' ? posFile : args[0]
+    notify(`Changed ~r~pos~s~ default output file from ~b~${orignialPath}~s~ to ~b~${posFile}~s~`)
+})
 RegisterCommand("pos", (source, args) => {
-    let listName = typeof args[0] == 'undefined' ? "hunters_spawn" : args[0]
+    let listName = typeof args[0] == 'undefined' ? posFile : args[0]
     let coords = GetEntityCoords(PlayerPedId())
     let position = {
         x: coords[0],

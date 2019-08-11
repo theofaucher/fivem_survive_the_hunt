@@ -7,7 +7,6 @@ onNet('savePos', (listName, position) => {
     let player = source
 
     let listFilePath = "./positions/" + listName + ".json"
-    console.log(dirname(listFilePath))
 
     fs.existsSync(dirname(listFilePath)) || fs.mkdirSync(dirname(listFilePath), { recursive: true });
 
@@ -19,4 +18,5 @@ onNet('savePos', (listName, position) => {
     fs.writeFileSync(listFilePath, JSON.stringify(positions))
 
     emitNet('notify', player, `Position saved to ~b~${listFilePath}~s~, it now contains ~b~${positions.length}~s~ positions`)
+    console.log(`${GetPlayerName(player)} added position ${position.x},${position.y},${position.z},${position.heading} to ${listFilePath}`)
 })
