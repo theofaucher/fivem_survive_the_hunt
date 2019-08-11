@@ -185,7 +185,7 @@ RegisterCommand('rs', () => {
 })
 
 let posFile = "hunters_spawn"
-
+let posVehFile = "autospawn_vehicles"
 RegisterCommand("posFile", (source, args)=>{
     let orignialPath = posFile
     posFile = typeof args[0] == 'undefined' ? posFile : args[0]
@@ -202,4 +202,30 @@ RegisterCommand("pos", (source, args) => {
     }
 
     emitNet("savePos", listName, position)
+})
+
+RegisterCommand("posVehFile", (source, args)=>{
+    let orignialPath = posVehFile
+    posVehFile = typeof args[0] == 'undefined' ? posVehFile : args[0]
+    notify(`Changed ~r~pos~s~ default output file from ~b~${orignialPath}~s~ to ~b~${posVehFile}~s~`)
+})
+
+
+RegisterCommand("posVeh",(source, args)=>{
+    let listName = typeof args[0] == 'undefined' ? posVehFile : args[0]
+    let id = PlayerPedId()
+    if (IsPedInAnyVehicle(id)){
+        let vehicle = GetVehiclePedIsIn(id)
+        let coords = GetEntityCoords(vehicle)
+        let position = {
+            x: coords[0],
+            y: coords[1],
+            z: coords[2],
+            heading: GetEntityHeading(GetVehiclePedIsIn(id)),
+            model: GetEntityModel(vehicle)
+        }
+        emitNet('savePos',listName,position)
+    }else{
+        notify("You must be in a vehicle to save a vehicle position")
+    }
 })
