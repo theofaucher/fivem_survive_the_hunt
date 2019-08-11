@@ -1,18 +1,22 @@
 /// <reference path="D:\Projets\FiveM\Survive_the_hunt\server-data\autocompletion\typings\index.d.ts" />
-const fs = require('fs')
+/// <reference path="C:\Users\User\Desktop\FiveM_Hide_And_Seek\server-data\autocompletion\typings\index.d.ts" />
+import * as fs from 'fs';
+import {dirname} from 'path';
 
-RegisterCommand('pos',(source, args, raw) =>{
-    let ped = GetPlayerPed(source)
-    let coords = GetEntityCoords(ped, false)
-    let heading = GetEntityHeading(ped)
-    let essai = `\n {\n    "x": ${coords[0]},\n    "y": ${coords[1]},\n    "z": ${coords[2]},\n    "heading" : ${heading}\n},`
-    console.log(essai)
-    fs.writeFile('spawnhunters.txt', essai , (err) => {});
-    //fs.close();
+onNet('savePos', (listName, position) => {
+    let player = source
+
+    let listFilePath = "./positions/" + listName + ".json"
+    console.log(dirname(listFilePath))
+
+    fs.existsSync(dirname(listFilePath)) || fs.mkdirSync(dirname(listFilePath), { recursive: true });
+
+    let positions = []
+
+    if (fs.existsSync(listFilePath)) positions = JSON.parse(fs.readFileSync(listFilePath))
+
+    positions.push(position)
+    fs.writeFileSync(listFilePath, JSON.stringify(positions))
+
+    emitNet('notify', player, `Position saved to ~b~${listFilePath}~s~, it now contains ~b~${positions.length}~s~ positions`)
 })
-
-/*function fonction() , async =>{
-
-
-}
-*/
